@@ -14,7 +14,7 @@ Actions to Vercel.
 - **Vitest + React Testing Library** — component/unit tests (`src/test`)
 - **Playwright** — end-to-end tests (`tests/e2e`)
 - **GitHub Actions** — CI: lint → typecheck → unit tests → build → e2e on
-  every push/PR to `main`
+  every push/PR to `dev`, `staging`, or `master`
 - **Vercel** — hosting (auto-deploys from GitHub once connected)
 
 ## Local development
@@ -30,6 +30,24 @@ npm run test:e2e         # Playwright e2e tests (requires: npx playwright instal
 npm run build             # tsc -b && vite build -> dist/
 npm run preview           # preview the production build locally
 ```
+
+## Branching model
+
+Three long-lived branches, each an environment:
+
+- **`master`** — production. Protected: no direct pushes, changes land via
+  PR from `staging`.
+- **`staging`** — UAT. Protected: no direct pushes, changes land via PR
+  from `dev`.
+- **`dev`** — integration branch for day-to-day work, and the repo's
+  default branch (what you get on a fresh clone).
+
+Local/feature work branches off `dev` and merges back into `dev` via PR
+once it's ready. When `dev` is in good enough shape, open a `dev → staging`
+PR; once that's verified, open a `staging → master` PR to release. Both
+`/deep-review` and `/generate-ui` (see below) work against PRs targeting
+any of the three, so they're usable at every promotion step, not just for
+feature PRs into `dev`.
 
 ## Project structure
 
@@ -57,14 +75,19 @@ tsconfig.json / tsconfig.app.json / tsconfig.node.json
 1. Push this repo to GitHub.
 2. In Vercel, "Add New Project" → import the repo. Vercel auto-detects Vite;
    no config needed (build command `npm run build`, output `dist`).
-3. Every push to `master` deploys to your production URL
-   (`your-project.vercel.app` until you attach a custom domain); every PR
-   gets a preview URL.
+3. In the Vercel project's Git settings, explicitly set **Production
+   Branch** to `master`. Vercel sometimes defaults this to whatever GitHub
+   reports as the repo's default branch at import time — which is `dev`
+   here, not `master` — so don't rely on the default; set it yourself.
+4. With that set: pushes to `master` deploy to your production URL
+   (`your-project.vercel.app` until you attach a custom domain); pushes to
+   `dev`/`staging` and every PR get their own preview URLs, same as any
+   other branch.
 
 ## CI
 
-`.github/workflows/ci.yml` runs on every push/PR to `master`. All free, no LLM
-calls, no API billing:
+`.github/workflows/ci.yml` runs on every push/PR to `dev`, `staging`, or
+`master`. All free, no LLM calls, no API billing:
 
 1. Unit tests (Vitest + RTL) → production build
 2. Playwright e2e across 4 breakpoints (mobile/tablet/desktop/wide) +
@@ -101,8 +124,9 @@ has three ways to trigger it:
   brief if you don't.
 
 Both are gated to `ALLOWED_BASE_BRANCHES` (set at the top of each workflow
-file, default `master`) regardless of how they're triggered, so they can't
-fire against arbitrary branches even via `workflow_dispatch`. Note that the
+file, default `dev,staging,master`) regardless of how they're triggered, so
+they can't fire against arbitrary branches even via `workflow_dispatch`.
+Note that the
 branch-name trigger fires on `opened` only (not on every push to the
 branch) to keep the cost model close to the original comment-only design —
 but it does mean naming a branch `review/...` or `ui/...` and opening a PR

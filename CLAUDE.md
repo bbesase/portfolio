@@ -14,6 +14,14 @@ All source files are `.tsx`/`.ts`. Don't introduce `.jsx`/`.js` files in
 `src/`. Prefer explicit prop types over `any`; if a type is awkward, narrow
 it rather than widening to `any` or adding an `eslint-disable` comment.
 
+## Branching
+
+Three environments: `dev` (default branch, day-to-day integration) →
+`staging` (UAT) → `master` (production, protected). Feature branches come
+off `dev` and target `dev`, not `master` — only promotion PRs (`dev →
+staging`, `staging → master`) should target the later branches. See
+README's "Branching model" section for the full flow.
+
 ## Design tokens (do not invent new colors/fonts outside this list)
 
 - Colors: `ink` #08070D (bg), `panel` #121020, `panel2` #1A1730,

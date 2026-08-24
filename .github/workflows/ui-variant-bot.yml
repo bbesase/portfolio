@@ -34,7 +34,7 @@ permissions:
   id-token: write
 
 env:
-  ALLOWED_BASE_BRANCHES: master
+  ALLOWED_BASE_BRANCHES: dev,staging,master
 
 jobs:
   gate:
@@ -166,7 +166,7 @@ jobs:
             const { execFileSync } = require('child_process');
             const fs = require('fs');
 
-            const baseRef = process.env.HEAD_REF; // the PR's own branch, not main
+            const baseRef = process.env.HEAD_REF; // the PR's own branch (dev/staging/master, whichever it targets)
             const prNumber = process.env.PR_NUMBER;
             const brief = process.env.BRIEF;
             const reviewBranch = `ui-variant/pr-${prNumber}-${context.runId}`;

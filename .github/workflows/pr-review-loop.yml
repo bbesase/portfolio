@@ -29,7 +29,7 @@ permissions:
 env:
   # Comma-separated list. Only PRs targeting one of these branches are
   # eligible, whether triggered by comment or by manual dispatch.
-  ALLOWED_BASE_BRANCHES: master
+  ALLOWED_BASE_BRANCHES: dev,staging,master
 
 jobs:
   gate:
@@ -45,6 +45,7 @@ jobs:
       allowed: ${{ steps.check.outputs.allowed }}
       pr_number: ${{ steps.check.outputs.pr_number }}
       head_ref: ${{ steps.check.outputs.head_ref }}
+      base_ref: ${{ steps.check.outputs.base_ref }}
     steps:
       - name: Resolve PR and check base branch
         id: check
@@ -68,6 +69,7 @@ jobs:
             core.setOutput('allowed', String(isAllowed));
             core.setOutput('pr_number', String(prNumber));
             core.setOutput('head_ref', pr.head.ref);
+            core.setOutput('base_ref', pr.base.ref);
 
             if (!isAllowed) {
               core.notice(`PR targets '${pr.base.ref}', which is not in ALLOWED_BASE_BRANCHES [${allowed.join(', ')}]. Skipping review.`);
@@ -84,6 +86,12 @@ jobs:
         with:
           ref: ${{ needs.gate.outputs.head_ref }}
           fetch-depth: 0
+
+      # The base branch is now one of dev/staging/master depending on the PR,
+      # not always master — make sure origin/<base_ref> actually exists
+      # locally for the diff, regardless of what actions/checkout fetched.
+      - name: Fetch base branch
+        run: git fetch origin ${{ needs.gate.outputs.base_ref }}
 
       - uses: actions/setup-node@v4
         with:
@@ -104,7 +112,7 @@ jobs:
           # mode and no-ops on every event we actually use (issue_comment,
           # pull_request, workflow_dispatch alike).
           prompt: |
-            You are a rigorous senior code reviewer, working directly in this checked-out branch. Follow CLAUDE.md for the review rubric and design tokens. Loop up to 10 times: (1) review the diff against origin/master for correctness, accessibility, test coverage, and adherence to CLAUDE.md; (2) if you find real issues, fix them in the files directly, then run `npm run lint`, `npm run typecheck`, and `npm run test -- --run` and `npm run build` to confirm nothing broke; (3) re-review your own changes fresh, as if reviewing someone else's PR. Stop the loop early the first time a full pass finds no issues worth fixing -- do not manufacture busywork to fill 10 rounds. When done, commit any changes you made with a clear conventional-commit message, and write a short summary (what you found, what you changed, and why you stopped when you did) to REVIEW_SUMMARY.md — that file will be posted as a PR comment.
+            You are a rigorous senior code reviewer, working directly in this checked-out branch. Follow CLAUDE.md for the review rubric and design tokens. Loop up to 10 times: (1) review the diff against origin/${{ needs.gate.outputs.base_ref }} for correctness, accessibility, test coverage, and adherence to CLAUDE.md; (2) if you find real issues, fix them in the files directly, then run `npm run lint`, `npm run typecheck`, and `npm run test -- --run` and `npm run build` to confirm nothing broke; (3) re-review your own changes fresh, as if reviewing someone else's PR. Stop the loop early the first time a full pass finds no issues worth fixing -- do not manufacture busywork to fill 10 rounds. When done, commit any changes you made with a clear conventional-commit message, and write a short summary (what you found, what you changed, and why you stopped when you did) to REVIEW_SUMMARY.md — that file will be posted as a PR comment.
           claude_args: |
             --max-turns 40
             --model claude-sonnet-4-6
