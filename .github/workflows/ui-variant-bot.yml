@@ -125,6 +125,11 @@ jobs:
 
       - run: npm ci
 
+      # Pre-installed here (not left to Claude) so it doesn't cost the agent
+      # turns/tool-calls, and so a flaky download can't derail the run.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Generate and judge variants
         uses: anthropics/claude-code-action@v1
         env:
@@ -135,11 +140,15 @@ jobs:
           # mode and no-ops on every event we actually use (issue_comment,
           # pull_request, workflow_dispatch alike).
           prompt: |
-            Follow CLAUDE.md for design tokens and the UI variant judging rubric. Brief: '${{ needs.gate.outputs.brief }}'. Generate exactly ${{ needs.gate.outputs.count }} distinct implementations of this brief, each a real, working variant (not a description) -- vary layout, motion, and emphasis while staying inside the design tokens. Keep each variant isolated (e.g. as separate component files or clearly separated branches of logic) so they can be compared. Verify each variant builds with `npm run build`. Then judge all variants against the rubric in CLAUDE.md, score each one, and pick a single winner. Replace the target UI with the winning variant only, delete the losing variants' code, run `npm run lint`, `npm run typecheck`, `npm run test -- --run`, and `npm run build` to confirm the final state is clean, then write a summary to UI_VARIANT_SUMMARY.md: the brief, each variant's score and one-line rationale, and why the winner won.
+            Follow CLAUDE.md for design tokens and the UI variant judging rubric. Brief: '${{ needs.gate.outputs.brief }}'. Generate exactly ${{ needs.gate.outputs.count }} distinct implementations of this brief, each a real, working variant (not a description) -- vary layout, motion, and emphasis while staying inside the design tokens. Keep each variant isolated (e.g. as separate component files or clearly separated branches of logic) so they can be compared. Verify each variant builds with `npm run build`.
+
+            Then, for each variant in turn: wire it in temporarily, run `npm run build`, serve the build with `npm run preview -- --port 4173 --strictPort` in the background, use Playwright (`chromium` is already installed; import it from `@playwright/test`) to open a 1280x800 headless page against that server, wait for any entrance animation/transition to settle to a representative frame, screenshot the specific element or section the brief concerns (fall back to a full-page screenshot if the brief doesn't point at one element) to `variant-screenshots/v1.png`, `v2.png`, etc. (exactly this filename pattern, 1-indexed in generation order), then stop the preview server before moving to the next variant. A small reusable script under `scripts/` for this is fine to leave behind. Every variant must get a screenshot, including the eventual winner and losers -- these are the only thing the human will actually look at to decide, so don't skip any.
+
+            Then judge all variants against the rubric in CLAUDE.md, score each one, and pick a single winner. Replace the target UI with the winning variant only, delete the losing variants' code (but keep every variant's screenshot file -- those are the comparison record), run `npm run lint`, `npm run typecheck`, `npm run test -- --run`, and `npm run build` to confirm the final state is clean, then write a summary to UI_VARIANT_SUMMARY.md: the brief, and for each variant its score, one-line rationale, and its screenshot embedded as `![v1](variant-screenshots/v1.png)` (exactly that relative path -- it gets rewritten to a working URL automatically after you're done), ending with why the winner won.
           claude_args: |
-            --max-turns 60
+            --max-turns 100
             --model claude-sonnet-4-6
-            --allowedTools "Read,Edit,Write,Bash(npm run lint:*),Bash(npm run typecheck:*),Bash(npm run test:*),Bash(npm run build:*),Bash(git *)"
+            --allowedTools "Read,Edit,Write,Bash(npm run lint:*),Bash(npm run typecheck:*),Bash(npm run test:*),Bash(npm run build:*),Bash(npm run preview:*),Bash(node *),Bash(git *)"
 
       - name: Push winning variant to a review branch and open a PR
         uses: actions/github-script@v7
@@ -194,6 +203,17 @@ jobs:
             git('commit', '-m', commitTitle);
             git('push', 'origin', reviewBranch);
 
+            // Claude was told to reference screenshots as relative paths
+            // (variant-screenshots/v1.png, etc.) since it has no way to know
+            // the review branch name in advance. Now that the branch exists
+            // and is pushed, rewrite those into raw.githubusercontent.com
+            // URLs so the images actually render in the PR body/comment.
+            const rawBase = `https://raw.githubusercontent.com/${context.repo.owner}/${context.repo.repo}/${reviewBranch}`;
+            const summaryWithImages = summary.replace(
+              /\]\(variant-screenshots\//g,
+              `](${rawBase}/variant-screenshots/`,
+            );
+
             // Open a PR from the review branch INTO the original PR's branch,
             // so the winning variant shows up as a normal, reviewable diff
             // rather than landing directly.
@@ -203,12 +223,12 @@ jobs:
               title: `UI variant: ${brief}`.slice(0, 250),
               head: reviewBranch,
               base: baseRef,
-              body: `Agent-generated UI variant for review. Merge this into \`${baseRef}\` once you're happy with it, or close it and re-run \`/generate-ui\` with a refined brief.\n\n${summary}`,
+              body: `Agent-generated UI variant for review. Merge this into \`${baseRef}\` once you're happy with it, or close it and re-run \`/generate-ui\` with a refined brief.\n\n${summaryWithImages}`,
             });
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: Number(prNumber),
-              body: `### 🎨 Claude UI variant bot\n\nOpened #${reviewPr.number} with the winning variant for you to review before it merges into this branch.\n\n${summary}`,
+              body: `### 🎨 Claude UI variant bot\n\nOpened #${reviewPr.number} with the winning variant for you to review before it merges into this branch.\n\n${summaryWithImages}`,
             });
