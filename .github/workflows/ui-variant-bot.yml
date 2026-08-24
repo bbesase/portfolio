@@ -26,7 +26,7 @@ permissions:
   issues: write
 
 env:
-  ALLOWED_BASE_BRANCHES: main
+  ALLOWED_BASE_BRANCHES: master
 
 jobs:
   gate:

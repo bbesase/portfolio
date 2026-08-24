@@ -57,13 +57,13 @@ tsconfig.json / tsconfig.app.json / tsconfig.node.json
 1. Push this repo to GitHub.
 2. In Vercel, "Add New Project" → import the repo. Vercel auto-detects Vite;
    no config needed (build command `npm run build`, output `dist`).
-3. Every push to `main` deploys to your production URL
+3. Every push to `master` deploys to your production URL
    (`your-project.vercel.app` until you attach a custom domain); every PR
    gets a preview URL.
 
 ## CI
 
-`.github/workflows/ci.yml` runs on every push/PR to `main`. All free, no LLM
+`.github/workflows/ci.yml` runs on every push/PR to `master`. All free, no LLM
 calls, no API billing:
 
 1. Unit tests (Vitest + RTL) → production build
@@ -74,7 +74,7 @@ calls, no API billing:
 4. Bundle size budget (`size-limit`, config in `package.json`)
 5. GitHub's Dependency Review Action on PRs
 6. Changelog: `git-cliff` generates `CHANGELOG.md` from Conventional Commit
-   messages on every push to `main` — deterministic, no LLM involved
+   messages on every push to `master` — deterministic, no LLM involved
 
 ## Agent workflows (Claude Code in GitHub Actions)
 
@@ -97,7 +97,7 @@ Two workflows use Claude Code as a real agent, not just CI scripting:
 
 **Both are manual-trigger only** — they never run on every push. Both are
 also gated to `ALLOWED_BASE_BRANCHES` (set at the top of each workflow file,
-default `main`) regardless of how they're triggered, so they can't fire
+default `master`) regardless of how they're triggered, so they can't fire
 against arbitrary branches even via `workflow_dispatch`.
 
 ### Setup (one-time)

@@ -25,7 +25,7 @@ permissions:
 env:
   # Comma-separated list. Only PRs targeting one of these branches are
   # eligible, whether triggered by comment or by manual dispatch.
-  ALLOWED_BASE_BRANCHES: main
+  ALLOWED_BASE_BRANCHES: master
 
 jobs:
   gate:
@@ -95,7 +95,7 @@ jobs:
             --max-turns 40
             --model claude-sonnet-4-6
             --allowedTools "Read,Edit,Bash(npm run lint:*),Bash(npm run typecheck:*),Bash(npm run test:*),Bash(npm run build:*),Bash(git *)"
-            --system-prompt "You are a rigorous senior code reviewer, working directly in this checked-out branch. Follow CLAUDE.md for the review rubric and design tokens. Loop up to 10 times: (1) review the diff against origin/main for correctness, accessibility, test coverage, and adherence to CLAUDE.md; (2) if you find real issues, fix them in the files directly, then run `npm run lint`, `npm run typecheck`, and `npm run test -- --run` and `npm run build` to confirm nothing broke; (3) re-review your own changes fresh, as if reviewing someone else's PR. Stop the loop early the first time a full pass finds no issues worth fixing -- do not manufacture busywork to fill 10 rounds. When done, commit any changes you made with a clear conventional-commit message, and write a short summary (what you found, what you changed, and why you stopped when you did) that you'll post as a PR comment."
+            --system-prompt "You are a rigorous senior code reviewer, working directly in this checked-out branch. Follow CLAUDE.md for the review rubric and design tokens. Loop up to 10 times: (1) review the diff against origin/master for correctness, accessibility, test coverage, and adherence to CLAUDE.md; (2) if you find real issues, fix them in the files directly, then run `npm run lint`, `npm run typecheck`, and `npm run test -- --run` and `npm run build` to confirm nothing broke; (3) re-review your own changes fresh, as if reviewing someone else's PR. Stop the loop early the first time a full pass finds no issues worth fixing -- do not manufacture busywork to fill 10 rounds. When done, commit any changes you made with a clear conventional-commit message, and write a short summary (what you found, what you changed, and why you stopped when you did) that you'll post as a PR comment."
 
       - name: Push fixes and comment summary
         uses: actions/github-script@v7
