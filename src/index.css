@@ -3,6 +3,17 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-ink: #08070D;
+    --color-panel: #121020;
+    --color-panel2: #1A1730;
+    --color-line: #2A2640;
+    --color-mist: #9691B0;
+    --color-paper: #F3F1FA;
+    --color-volt: #FF5D5D;
+    --color-cyan: #3FE0D0;
+    --color-violet: #8B6BFF;
+  }
   html {
     scroll-behavior: smooth;
   }
