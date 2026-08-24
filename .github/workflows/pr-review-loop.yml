@@ -21,6 +21,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  id-token: write
 
 env:
   # Comma-separated list. Only PRs targeting one of these branches are

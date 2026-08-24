@@ -24,6 +24,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  id-token: write
 
 env:
   ALLOWED_BASE_BRANCHES: master
