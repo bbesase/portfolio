@@ -78,27 +78,36 @@ calls, no API billing:
 
 ## Agent workflows (Claude Code in GitHub Actions)
 
-Two workflows use Claude Code as a real agent, not just CI scripting:
+Two workflows use Claude Code as a real agent, not just CI scripting. Each
+has three ways to trigger it:
 
 - **`.github/workflows/pr-review-loop.yml`** — comment `/deep-review` on a
-  PR (or run manually from the Actions tab) to have Claude review the diff
-  against `CLAUDE.md`'s rubric, fix real issues, verify with the test suite,
-  and re-review — up to 10 rounds, stopping early once a pass is clean.
+  PR, open a PR whose head branch name starts with **`review/`**, or run
+  manually from the Actions tab. Claude reviews the diff against
+  `CLAUDE.md`'s rubric, fixes real issues, verifies with the test suite,
+  and re-reviews — up to 10 rounds, stopping early once a pass is clean.
   Fixes are committed directly to the PR branch.
 - **`.github/workflows/ui-variant-bot.yml`** — comment
-  `/generate-ui <description>` on a PR to have Claude build 1–10 real
-  implementations of that UI element and judge them against `CLAUDE.md`'s
-  rubric. The winner is **not** pushed directly: it lands on a new branch
+  `/generate-ui <description>` on a PR, open a PR whose head branch name
+  starts with **`ui/`** (the brief is read from the PR body's `## Brief`
+  section, falling back to the whole body or the PR title), or run
+  manually from the Actions tab. Claude builds 1–10 real implementations
+  of that UI element and judges them against `CLAUDE.md`'s rubric. The
+  winner is **not** pushed directly: it lands on a new branch
   (`ui-variant/pr-<number>-<run id>`) and the bot opens a second PR from
   that branch into your PR's branch, with the scoring rationale in the PR
   body. You review that diff like any other PR — merge it into your branch
   if you like it, or close it and re-run `/generate-ui` with a refined
   brief if you don't.
 
-**Both are manual-trigger only** — they never run on every push. Both are
-also gated to `ALLOWED_BASE_BRANCHES` (set at the top of each workflow file,
-default `master`) regardless of how they're triggered, so they can't fire
-against arbitrary branches even via `workflow_dispatch`.
+Both are gated to `ALLOWED_BASE_BRANCHES` (set at the top of each workflow
+file, default `master`) regardless of how they're triggered, so they can't
+fire against arbitrary branches even via `workflow_dispatch`. Note that the
+branch-name trigger fires on `opened` only (not on every push to the
+branch) to keep the cost model close to the original comment-only design —
+but it does mean naming a branch `review/...` or `ui/...` and opening a PR
+is enough to spend quota, with no comment confirmation step. Use the
+`/deep-review` or `/generate-ui` comment to re-run on that same PR later.
 
 ### Setup (one-time)
 
