@@ -13,6 +13,13 @@
 
 - Update changelog [skip ci]
 
+- Update changelog [skip ci]
+
+
+### Docs
+
+- Adopt dev/staging/master branching model
+
 
 ### Ci
 
