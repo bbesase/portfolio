@@ -1,0 +1,29 @@
+# git-cliff config: generates CHANGELOG.md from Conventional Commits.
+# No LLM involved -- deterministic, free, runs in CI on every push to main.
+[changelog]
+header = "# Changelog\n\n"
+body = """
+{% if version %}## {{ version }} - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}## Unreleased
+{% endif %}
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | upper_first }}
+{% for commit in commits %}
+- {{ commit.message | upper_first }}
+{% endfor %}
+{% endfor %}
+"""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+commit_parsers = [
+  { message = "^feat", group = "Features" },
+  { message = "^fix", group = "Fixes" },
+  { message = "^perf", group = "Performance" },
+  { message = "^refactor", group = "Refactors" },
+  { message = "^chore", group = "Chores" },
+  { message = "^docs", group = "Docs" },
+  { message = "^test", group = "Tests" },
+]
