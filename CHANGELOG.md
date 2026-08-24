@@ -9,6 +9,8 @@
 
 - Update changelog [skip ci]
 
+- Update changelog [skip ci]
+
 
 ### Ci
 
@@ -21,4 +23,6 @@
 - Trigger agent bots by branch-name prefix, not just PR comments
 
 - Use claude-code-action's prompt input, not --system-prompt
+
+- Re-authenticate git remote before pushing agent bot output
 
