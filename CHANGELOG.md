@@ -11,6 +11,8 @@
 
 - Update changelog [skip ci]
 
+- Update changelog [skip ci]
+
 
 ### Ci
 
@@ -25,4 +27,6 @@
 - Use claude-code-action's prompt input, not --system-prompt
 
 - Re-authenticate git remote before pushing agent bot output
+
+- Have ui-variant-bot screenshot every variant for visual comparison
 
