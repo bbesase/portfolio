@@ -112,11 +112,18 @@ jobs:
 
       - name: Push fixes and comment summary
         uses: actions/github-script@v7
+        env:
+          # claude-code-action revokes its own GitHub App installation token
+          # as part of its cleanup right after the previous step finishes,
+          # which leaves the checkout's git credentials dead for our push
+          # below. Re-authenticate the remote with a fresh token here.
+          PUSH_TOKEN: ${{ github.token }}
         with:
           script: |
             const { execSync } = require('child_process');
             execSync('git config user.name "claude-review-bot"');
             execSync('git config user.email "actions@github.com"');
+            execSync(`git remote set-url origin https://x-access-token:${process.env.PUSH_TOKEN}@github.com/${context.repo.owner}/${context.repo.repo}.git`);
             execSync('git add -A');
             let changed = true;
             try {

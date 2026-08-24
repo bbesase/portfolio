@@ -147,6 +147,11 @@ jobs:
           HEAD_REF: ${{ needs.gate.outputs.head_ref }}
           PR_NUMBER: ${{ needs.gate.outputs.pr_number }}
           BRIEF: ${{ needs.gate.outputs.brief }}
+          # claude-code-action revokes its own GitHub App installation token
+          # as part of its cleanup right after the previous step finishes,
+          # which leaves the checkout's git credentials dead for our push
+          # below. Re-authenticate the remote with a fresh token here.
+          PUSH_TOKEN: ${{ github.token }}
         with:
           script: |
             const { execFileSync } = require('child_process');
@@ -161,6 +166,7 @@ jobs:
 
             git('config', 'user.name', 'claude-design-bot');
             git('config', 'user.email', 'actions@github.com');
+            git('remote', 'set-url', 'origin', `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/${context.repo.owner}/${context.repo.repo}.git`);
             git('add', '-A');
 
             let changed = true;
