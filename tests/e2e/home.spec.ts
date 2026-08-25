@@ -26,6 +26,6 @@ test('nav links scroll to each section', async ({ page }) => {
 
 test('contact section exposes a mailto link', async ({ page }) => {
   await page.goto('/')
-  const link = page.getByRole('link', { name: /you@example\.com/i })
-  await expect(link).toHaveAttribute('href', 'mailto:you@example.com')
+  const link = page.getByRole('link', { name: /bbesase51@gmail\.com/i })
+  await expect(link).toHaveAttribute('href', 'mailto:bbesase51@gmail.com')
 })
