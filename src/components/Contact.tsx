@@ -25,7 +25,7 @@ export default function Contact() {
           </a>
         </div>
       </div>
-      <footer className="mt-24 text-center text-xs text-mist/70 font-mono">
+      <footer className="mt-24 text-center text-xs text-mist font-mono">
         Built with React, Tailwind, and Claude Code.
       </footer>
     </section>

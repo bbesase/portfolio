@@ -8,12 +8,17 @@ test('homepage loads with hero and nav', async ({ page }) => {
 
 test('nav links scroll to each section', async ({ page }) => {
   await page.goto('/')
+  const menuToggle = page.getByRole('button', { name: /menu/i })
   for (const [label, id] of [
     ['About', 'about'],
     ['Skills', 'skills'],
     ['Projects', 'projects'],
     ['Contact', 'contact'],
   ]) {
+    // Below the sm breakpoint, nav links live behind a hamburger toggle.
+    if (await menuToggle.isVisible()) {
+      await menuToggle.click()
+    }
     await page.getByRole('link', { name: label, exact: true }).first().click()
     await expect(page.locator(`#${id}`)).toBeInViewport()
   }
