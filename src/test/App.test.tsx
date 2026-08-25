@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import App from '../App'
 
-// jsdom has no canvas 2D context; stub it so PolyMesh doesn't throw.
+// jsdom has no canvas 2D context; stub it so LowPolyV3 doesn't throw.
 beforeEach(() => {
   HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
     clearRect: vi.fn(),
@@ -42,7 +42,7 @@ describe('App', () => {
 
   it('renders a working mailto contact link', () => {
     render(<App />)
-    const link = screen.getByRole('link', { name: /you@example\.com/i })
-    expect(link).toHaveAttribute('href', 'mailto:you@example.com')
+    const link = screen.getByRole('link', { name: /bbesase51@gmail\.com/i })
+    expect(link).toHaveAttribute('href', 'mailto:bbesase51@gmail.com')
   })
 })

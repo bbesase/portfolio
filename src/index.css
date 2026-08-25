@@ -47,3 +47,14 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Suppress transitions until the very first paint has committed, so
+   elements with transition-colors don't visibly (and non-deterministically)
+   animate from an unstyled/default state into their real styling on load —
+   e.g. an <a> briefly rendering in the browser's default link blue before
+   Tailwind's color utility applies, then transitioning to it instead of
+   just rendering it. main.tsx removes this class after the first frame. */
+body.preload,
+body.preload * {
+  transition: none !important;
+}

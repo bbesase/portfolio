@@ -17,7 +17,7 @@ export default function Nav() {
         className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4"
       >
         <a href="#top" className="font-display font-semibold tracking-tight text-paper">
-          Your<span className="text-volt">Name</span>
+          Brent<span className="text-volt">Besase</span>
         </a>
         <ul className="hidden sm:flex items-center gap-8">
           {links.map((l) => (
