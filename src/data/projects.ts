@@ -14,10 +14,11 @@ export const projects: Project[] = [
     href: '#',
   },
   {
-    title: 'Project two',
-    blurb: 'Swap in a real project: what it does, the problem it solved, and your role building it.',
-    tags: ['Add', 'Your', 'Stack'],
-    href: '#',
+    title: 'Archmage',
+    blurb:
+      'A Minecraft Forge mod built around mastering six elements — Lightning, Water/Ice, Fire, Earth, Holy, and Void. XP-based mastery tiers unlock spells, elemental armor, and legendary gear; four elemental bosses guard the path to Holy and Void.',
+    tags: ['Java', 'Minecraft Forge', 'Gradle'],
+    href: 'https://github.com/bbesase/archmage',
   },
   {
     title: 'Project three',
