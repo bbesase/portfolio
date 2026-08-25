@@ -6,7 +6,7 @@ export default function Projects() {
       <div className="max-w-6xl mx-auto px-6 pb-10">
         <p className="eyebrow mb-4">Projects</p>
         <h2 className="font-display text-3xl sm:text-4xl font-semibold mb-14 max-w-xl">
-          A few things I've shipped.
+          A few things I've worked on and shipped.
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p) => (
