@@ -13,7 +13,7 @@ export default function Projects() {
             <a
               key={p.title}
               href={p.href}
-              className="group block bg-panel2 border border-line rounded-2xl p-6 hover:border-cyan transition-colors"
+              className="group block bg-panel2 border border-line rounded-2xl p-6 text-paper no-underline hover:border-cyan transition-colors"
             >
               <h3 className="font-display text-xl font-semibold mb-2 group-hover:text-cyan transition-colors">
                 {p.title}
