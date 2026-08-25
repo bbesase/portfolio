@@ -1,4 +1,4 @@
-import PolyMesh from './PolyMesh'
+import LowPolyV3 from './LowPolyV3'
 
 export default function Hero() {
   return (
@@ -7,7 +7,7 @@ export default function Hero() {
       className="relative min-h-screen flex items-center overflow-hidden"
     >
       <div className="absolute inset-0">
-        <PolyMesh />
+        <LowPolyV3 />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-ink/40 to-ink pointer-events-none" />
 
