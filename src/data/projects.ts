@@ -21,9 +21,10 @@ export const projects: Project[] = [
     href: 'https://github.com/bbesase/archmage',
   },
   {
-    title: 'Project three',
-    blurb: 'A third project slot — pick the one that best shows range beyond the other two.',
-    tags: ['Add', 'Your', 'Stack'],
-    href: '#',
+    title: 'MigrateIQ',
+    blurb:
+      'A multi-tenant SaaS platform for migrating data between platforms, with idempotent item tracking through a validated state machine. Turborepo monorepo: Next.js dashboard, API, and background workers processing each migration through Prisma/Postgres.',
+    tags: ['TypeScript', 'Next.js', 'Prisma', 'Turborepo'],
+    href: 'https://migrateiq.vercel.app',
   },
 ]
