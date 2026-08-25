@@ -13,13 +13,13 @@ export default function Projects() {
             <a
               key={p.title}
               href={p.href}
-              className="group block bg-panel2 border border-line rounded-2xl p-6 text-paper no-underline hover:border-cyan transition-colors"
+              className="group flex flex-col bg-panel2 border border-line rounded-2xl p-6 text-paper no-underline hover:border-cyan transition-colors"
             >
               <h3 className="font-display text-xl font-semibold mb-2 group-hover:text-cyan transition-colors">
                 {p.title}
               </h3>
               <p className="text-mist text-sm leading-relaxed mb-5">{p.blurb}</p>
-              <ul className="flex flex-wrap gap-2">
+              <ul className="flex flex-wrap gap-2 mt-auto">
                 {p.tags.map((t) => (
                   <li
                     key={t}
