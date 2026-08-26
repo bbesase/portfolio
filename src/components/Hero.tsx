@@ -14,11 +14,11 @@ export default function Hero() {
       <div className="relative max-w-6xl mx-auto px-6 pt-24">
         <p className="eyebrow mb-5">Software Engineer — Frontend &amp; Agentic Tooling</p>
         <h1 className="font-display font-semibold text-5xl sm:text-7xl leading-[1.05] max-w-3xl">
-          I build interfaces,
+          I build interfaces
           <br />
-          <span className="text-volt">then teach agents</span>
+          <span className="text-volt">people actually use,</span>
           <br />
-          to help build the next one.
+          backed by systems that actually work.
         </h1>
         <p className="mt-6 max-w-xl text-mist text-lg">
           React and Tailwind for the product. Claude Code, custom skills, and subagents
