@@ -13,13 +13,18 @@ export default function Projects() {
             <a
               key={p.title}
               href={p.href}
-              className="group flex flex-col bg-panel2 border border-line rounded-2xl p-6 text-paper no-underline hover:border-cyan transition-colors"
+              className="group block bg-panel2 border border-line rounded-2xl p-6 text-paper no-underline hover:border-cyan transition-colors"
             >
               <h3 className="font-display text-xl font-semibold mb-2 group-hover:text-cyan transition-colors">
                 {p.title}
               </h3>
-              <p className="text-mist text-sm leading-relaxed mb-5">{p.blurb}</p>
-              <ul className="flex flex-wrap gap-2 mt-auto">
+              {/* Fixed height reserves space for the longest current blurb
+                  (7 lines) so every card's tags start at the same Y right
+                  after it, regardless of how short a given blurb is.
+                  line-clamp-7 truncates with an ellipsis if a future blurb
+                  ever runs longer than that. */}
+              <p className="text-mist text-sm leading-relaxed mb-5 h-40 line-clamp-7">{p.blurb}</p>
+              <ul className="flex flex-wrap gap-2">
                 {p.tags.map((t) => (
                   <li
                     key={t}
