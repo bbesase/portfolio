@@ -12,7 +12,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-ink/40 to-ink pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto px-6 pt-24">
-        <p className="eyebrow mb-5">Software Engineer — Frontend &amp; Agentic Tooling</p>
+        <p className="eyebrow mb-5">Software Engineer, Frontend &amp; Agentic Tooling</p>
         <h1 className="font-display font-semibold text-5xl sm:text-7xl leading-[1.05] max-w-3xl">
           I build interfaces
           <br />
@@ -22,8 +22,8 @@ export default function Hero() {
         </h1>
         <p className="mt-6 max-w-xl text-mist text-lg">
           React and Tailwind for the product. Claude Code, custom skills, and subagents
-          for the workflow behind it. Tested with RTL and Playwright, shipped through
-          GitHub Actions to Vercel.
+          for the workflow behind it. Tested with React Testing Library and Playwright,
+          shipped through GitHub Actions.
         </p>
         <div className="mt-10 flex flex-wrap gap-4">
           <a

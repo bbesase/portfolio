@@ -14,7 +14,7 @@ export default function About() {
           <p>
             I'm a software engineer who likes clean interfaces and messy, interesting
             problems. Most of what I build lately sits at the intersection of
-            frontend engineering and agentic AI tooling — using Claude Code, custom
+            frontend engineering and agentic AI tooling, using Claude Code, custom
             skills, and subagents as real collaborators in the build process, not just
             autocomplete.
           </p>
@@ -24,7 +24,7 @@ export default function About() {
             treating CI as the source of truth rather than "it worked on my machine."
           </p>
           <p>
-            Replace this paragraph with your own story — where you've worked, what
+            Replace this paragraph with your own story: where you've worked, what
             you care about, and what kind of problems you want to work on next.
           </p>
         </div>
