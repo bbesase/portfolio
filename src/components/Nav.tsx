@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from '../router'
 
 const links = [
   { href: '#about', label: 'About' },
@@ -30,6 +31,11 @@ export default function Nav() {
               </a>
             </li>
           ))}
+          <li>
+            <Link to="/journey" className="text-sm text-mist hover:text-cyan transition-colors">
+              My Journey
+            </Link>
+          </li>
         </ul>
         <div className="flex items-center gap-2">
           <a
@@ -82,6 +88,15 @@ export default function Nav() {
               </a>
             </li>
           ))}
+          <li>
+            <Link
+              to="/journey"
+              onClick={() => setOpen(false)}
+              className="block py-2 text-sm text-mist hover:text-cyan transition-colors"
+            >
+              My Journey
+            </Link>
+          </li>
         </ul>
       )}
     </header>
