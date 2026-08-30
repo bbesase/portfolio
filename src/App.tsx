@@ -1,22 +1,18 @@
-import Nav from './components/Nav'
-import Hero from './components/Hero'
-import About from './components/About'
-import Skills from './components/Skills'
-import Projects from './components/Projects'
-import Contact from './components/Contact'
+import { RouterProvider, useRouter } from './router'
+import Home from './pages/Home'
+import Journey from './pages/Journey'
+
+function Routes() {
+  const { path } = useRouter()
+  if (path === '/journey') return <Journey />
+  return <Home />
+}
 
 function App() {
   return (
-    <div className="min-h-screen bg-ink">
-      <Nav />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Contact />
-      </main>
-    </div>
+    <RouterProvider>
+      <Routes />
+    </RouterProvider>
   )
 }
 

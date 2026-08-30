@@ -8,3 +8,11 @@ test('homepage has no detectable accessibility violations', async ({ page }) => 
     .analyze()
   expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([])
 })
+
+test('journey page has no detectable accessibility violations', async ({ page }) => {
+  await page.goto('/journey')
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa'])
+    .analyze()
+  expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([])
+})
