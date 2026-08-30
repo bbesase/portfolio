@@ -1,0 +1,241 @@
+// Variant 4 — "Immersive": sticky timeline sidebar, collage fills card background dramatically
+import { useEffect, useRef, useState } from 'react'
+import { journey } from '../data/journey'
+import { Link } from '../router'
+
+const ACCENTS = ['volt', 'cyan', 'violet', 'volt', 'cyan'] as const
+type Accent = (typeof ACCENTS)[number]
+
+const HEX: Record<Accent, string> = { volt: '#FF5D5D', cyan: '#3FE0D0', violet: '#8B6BFF' }
+const CLS: Record<Accent, string> = { volt: 'text-volt', cyan: 'text-cyan', violet: 'text-violet' }
+
+type Item = { tech: string; x: number; y: number; rotate: number; size: number }
+
+const COLLAGE: Item[][] = [
+  [
+    { tech: 'storybook',      x: 55, y: 8,  rotate: 12,  size: 52 },
+    { tech: 'react',          x: 75, y: 3,  rotate: -8,  size: 72 },
+    { tech: 'typescript',     x: 62, y: 48, rotate: 5,   size: 48 },
+    { tech: 'github-actions', x: 82, y: 55, rotate: -15, size: 60 },
+  ],
+  [
+    { tech: 'azure',      x: 58, y: 10, rotate: 20,  size: 68 },
+    { tech: 'react',      x: 80, y: 35, rotate: -5,  size: 52 },
+    { tech: 'typescript', x: 65, y: 65, rotate: 10,  size: 56 },
+  ],
+  [
+    { tech: 'angular',     x: 60, y: 15, rotate: -8,  size: 64 },
+    { tech: 'material-ui', x: 80, y: 55, rotate: 12,  size: 58 },
+  ],
+  [
+    { tech: 'nodejs',  x: 60, y: 18, rotate: 15,  size: 66 },
+    { tech: 'angular', x: 80, y: 60, rotate: -18, size: 56 },
+  ],
+  [
+    { tech: 'react',      x: 62, y: 10, rotate: -10, size: 62 },
+    { tech: 'javascript', x: 80, y: 55, rotate: 18,  size: 58 },
+  ],
+]
+
+function Icon({ tech, size = 32 }: { tech: string; size?: number }) {
+  const p = { width: size, height: size, viewBox: '0 0 32 32', fill: 'none' as const, 'aria-hidden': true as const }
+  switch (tech) {
+    case 'react': return <svg {...p}><ellipse cx="16" cy="16" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1.5"/><ellipse cx="16" cy="16" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1.5" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1.5" transform="rotate(120 16 16)"/><circle cx="16" cy="16" r="2.5" fill="currentColor"/></svg>
+    case 'typescript': return <svg {...p}><rect x="4" y="4" width="24" height="24" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M10 17h8M14 12v10" stroke="currentColor" strokeWidth="2" strokeLinecap="square"/></svg>
+    case 'storybook': return <svg {...p}><rect x="8" y="3" width="14" height="26" rx="1" stroke="currentColor" strokeWidth="1.5"/><path d="M8 9h14" stroke="currentColor" strokeWidth="1.5"/><path d="M13 15c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2s-.9 2-2 2h-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+    case 'github-actions': return <svg {...p}><circle cx="16" cy="7" r="3" stroke="currentColor" strokeWidth="1.5"/><circle cx="7" cy="24" r="3" stroke="currentColor" strokeWidth="1.5"/><circle cx="25" cy="24" r="3" stroke="currentColor" strokeWidth="1.5"/><path d="M16 10v7M16 17l-6.5 4M16 17l6.5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+    case 'azure': return <svg {...p}><path d="M4 26L14 6l6 8-6 6 10 6H4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M14 6l10 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+    case 'angular': return <svg {...p}><path d="M16 3l13 4.5-2 17L16 29 5 24.5l-2-17z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M10 22l6-14 6 14M12 18h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+    case 'material-ui': return <svg {...p}><path d="M4 8v10l12 7 12-7V8L16 15z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M16 15V8" stroke="currentColor" strokeWidth="1.5"/><path d="M4 8l12 7 12-7" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6"/></svg>
+    case 'nodejs': return <svg {...p}><path d="M16 3l12 7v12L16 29 4 22V10z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M16 3v26M4 10l12 8 12-8" stroke="currentColor" strokeWidth="1" strokeOpacity="0.5"/></svg>
+    case 'javascript': return <svg {...p}><rect x="4" y="4" width="24" height="24" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M20 12v8c0 2-1 3.5-3 3.5s-3-1.5-3-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M12 12v11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+    default: return null
+  }
+}
+
+export default function JourneyV4() {
+  const allIndices = () => new Set(journey.map((_, i) => i))
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  const [revealed, setRevealed] = useState<Set<number>>(() => reducedMotion() ? allIndices() : new Set())
+  const [intersecting, setIntersecting] = useState<Set<number>>(() => reducedMotion() ? allIndices() : new Set([0]))
+  const refs = useRef<(HTMLElement | null)[]>([])
+
+  const current = intersecting.size > 0 ? Math.max(...intersecting) : (revealed.size > 0 ? Math.max(...revealed) : 0)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        const idx = parseInt(e.target.getAttribute('data-idx') ?? '0', 10)
+        if (e.isIntersecting) {
+          setRevealed((p) => new Set([...p, idx]))
+          setIntersecting((p) => new Set([...p, idx]))
+        } else {
+          setIntersecting((p) => { const n = new Set(p); n.delete(idx); return n })
+        }
+      })
+    }, { threshold: 0.12 })
+    refs.current.forEach((r) => r && obs.observe(r))
+    return () => obs.disconnect()
+  }, [])
+
+  const pad = (n: number) => String(n + 1).padStart(2, '0')
+
+  return (
+    <div className="min-h-screen bg-ink text-paper">
+      {/* Fixed header with prominent progress */}
+      <header className="fixed top-0 inset-x-0 z-50 backdrop-blur bg-ink/90 border-b border-line">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link to="/" className="font-display font-semibold tracking-tight">
+            Brent<span className="text-volt">Besase</span>
+          </Link>
+          <div
+            aria-live="polite"
+            aria-label={`Chapter ${current + 1} of ${journey.length}`}
+            className="flex items-center gap-3"
+          >
+            {/* Mini diamond row */}
+            {journey.map((_, i) => (
+              <div
+                key={i}
+                aria-hidden="true"
+                style={{
+                  width: 8, height: 8,
+                  background: i <= current ? HEX[ACCENTS[i]] : 'transparent',
+                  border: `1.5px solid ${i <= current ? HEX[ACCENTS[i]] : '#2A2640'}`,
+                  clipPath: 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)',
+                  transition: 'background-color 0.4s, border-color 0.4s',
+                }}
+              />
+            ))}
+            <span className="font-mono text-xs text-mist tracking-widest ml-2">
+              {pad(current)}&nbsp;/&nbsp;{String(journey.length).padStart(2, '0')}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex">
+        {/* Sticky left sidebar timeline */}
+        <div
+          className="hidden lg:flex flex-col items-center gap-0 sticky top-0 self-start"
+          style={{ width: 80, paddingTop: 72 + 24, height: '100vh', flexShrink: 0 }}
+        >
+          <div className="relative flex flex-col items-center flex-1">
+            {/* Vertical line */}
+            <div className="absolute top-8 bottom-8 left-1/2 -translate-x-1/2 w-px bg-line" aria-hidden="true" />
+            <div className="flex flex-col justify-around flex-1 w-full items-center py-4 z-10">
+              {journey.map((_, i) => (
+                <div key={i} className="flex flex-col items-center gap-1">
+                  <div
+                    style={{
+                      width: 18, height: 18,
+                      background: revealed.has(i) ? HEX[ACCENTS[i]] : '#08070D',
+                      border: `2px solid ${HEX[ACCENTS[i]]}`,
+                      clipPath: 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)',
+                      transition: 'background-color 0.6s ease',
+                    }}
+                    aria-hidden="true"
+                  />
+                  <span
+                    className="font-mono text-[8px] tracking-wider"
+                    style={{ color: HEX[ACCENTS[i]], opacity: revealed.has(i) ? 0.9 : 0.3 }}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Main content */}
+        <div className="flex-1 min-w-0">
+          {/* Hero */}
+          <section className="px-6 lg:px-12 pt-32 pb-20">
+            <p className="eyebrow mb-6">My Journey</p>
+            <h1 className="font-display font-semibold leading-none mb-8">
+              <span className="block text-5xl sm:text-7xl text-paper">Where I've worked,</span>
+              <span className="block text-5xl sm:text-7xl text-mist">and what I built there.</span>
+            </h1>
+            <p className="text-mist text-lg max-w-md leading-relaxed">
+              Five roles, five different problems. Scroll through the story.
+            </p>
+            <div className="flex items-center gap-3 mt-8">
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-mist/50">Scroll</span>
+              <div className="w-16 h-px bg-cyan/40" />
+            </div>
+          </section>
+
+          {/* Chapters */}
+          <div className="px-6 lg:px-12 pb-24 space-y-12 max-w-4xl">
+            {journey.map((ch, i) => {
+              const accent = ACCENTS[i]
+              const show = revealed.has(i)
+
+              return (
+                <section
+                  key={ch.company}
+                  ref={(el) => { refs.current[i] = el }}
+                  data-idx={i}
+                  aria-labelledby={`v4-ch-${i}`}
+                  className="relative bg-panel overflow-hidden rounded-sm"
+                  style={{
+                    opacity: show ? 1 : 0,
+                    transform: show ? 'translateX(0)' : 'translateX(-24px)',
+                    transition: 'opacity 0.7s ease, transform 0.7s ease',
+                  }}
+                >
+                  {/* Faceted border */}
+                  <div
+                    aria-hidden="true"
+                    style={{ height: 5, background: HEX[accent], clipPath: 'polygon(0 0, 100% 40%, 100% 100%, 0 100%)' }}
+                  />
+                  {/* Dramatic full-card tech collage */}
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+                    {COLLAGE[i].map((item) => (
+                      <div
+                        key={item.tech}
+                        className="absolute"
+                        style={{
+                          left: `${item.x}%`, top: `${item.y}%`,
+                          transform: `rotate(${item.rotate}deg)`,
+                          opacity: 0.06,
+                          color: HEX[accent],
+                        }}
+                      >
+                        <Icon tech={item.tech} size={item.size} />
+                      </div>
+                    ))}
+                  </div>
+                  {/* Content */}
+                  <div className="relative p-6 md:p-8 max-w-2xl">
+                    <p className={`eyebrow ${CLS[accent]} mb-2 text-[10px]`}>{ch.start} – {ch.end} · {ch.location}</p>
+                    <h2 id={`v4-ch-${i}`} className="font-display text-3xl font-semibold text-paper mb-1">{ch.company}</h2>
+                    <p className={`font-medium mb-5 ${CLS[accent]} text-lg`}>{ch.role}</p>
+                    <p className="text-mist leading-relaxed mb-7">{ch.summary}</p>
+                    <ul className="space-y-3">
+                      {ch.highlights.map((h) => (
+                        <li key={h} className="flex items-start gap-3">
+                          <svg width="8" height="8" viewBox="0 0 8 8" fill={HEX[accent]} aria-hidden="true" className="mt-1.5 flex-shrink-0"><path d="M4 0l4 4-4 4L0 4z"/></svg>
+                          <span className="text-mist text-sm leading-relaxed">{h}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </section>
+              )
+            })}
+          </div>
+
+          <div className="px-6 lg:px-12 pb-16">
+            <Link to="/" className="inline-block rounded-full border border-line text-paper font-medium px-6 py-3 hover:border-cyan hover:text-cyan transition-colors">
+              Back home
+            </Link>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}
