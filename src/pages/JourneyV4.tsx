@@ -58,23 +58,41 @@ export default function JourneyV4() {
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   const [revealed, setRevealed] = useState<Set<number>>(() => reducedMotion() ? allIndices() : new Set())
-  const [intersecting, setIntersecting] = useState<Set<number>>(() => reducedMotion() ? allIndices() : new Set([0]))
+  const [intersecting, setIntersecting] = useState<Set<number>>(() => reducedMotion() ? allIndices() : new Set())
+  // Chapters already in the initial viewport on load (varies by viewport
+  // height -- taller screens can fit more than just chapter 0) shouldn't
+  // wait on a 700ms transition to become visible: that's a needless pop-in
+  // delay for real users, and it's a genuine, if brief, low-contrast state
+  // mid-fade that axe reliably catches since page load and analysis both
+  // happen well inside that window. Tracked separately so only these
+  // chapters' entrance transition is suppressed -- chapters revealed later
+  // by actually scrolling still animate normally.
+  const [noAnimate, setNoAnimate] = useState<Set<number>>(() => new Set())
   const refs = useRef<(HTMLElement | null)[]>([])
 
   const current = intersecting.size > 0 ? Math.max(...intersecting) : (revealed.size > 0 ? Math.max(...revealed) : 0)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // IntersectionObserver fires its first callback almost immediately for
+    // elements already in the viewport when observe() is called -- reuse
+    // that first batch to detect "already visible on load" instead of a
+    // separate DOM-measuring effect.
+    let firstBatch = true
     const obs = new IntersectionObserver((entries) => {
+      const initial = new Set<number>()
       entries.forEach((e) => {
         const idx = parseInt(e.target.getAttribute('data-idx') ?? '0', 10)
         if (e.isIntersecting) {
+          if (firstBatch) initial.add(idx)
           setRevealed((p) => new Set([...p, idx]))
           setIntersecting((p) => new Set([...p, idx]))
         } else {
           setIntersecting((p) => { const n = new Set(p); n.delete(idx); return n })
         }
       })
+      if (firstBatch && initial.size) setNoAnimate(initial)
+      firstBatch = false
     }, { threshold: 0.12 })
     refs.current.forEach((r) => r && obs.observe(r))
     return () => obs.disconnect()
@@ -117,8 +135,10 @@ export default function JourneyV4() {
       </header>
 
       <main className="flex">
-        {/* Sticky left sidebar timeline */}
+        {/* Sticky left sidebar timeline -- purely decorative, duplicates info
+            already in each chapter's own heading and dates below */}
         <div
+          aria-hidden="true"
           className="hidden lg:flex flex-col items-center gap-0 sticky top-0 self-start"
           style={{ width: 80, paddingTop: 72 + 24, height: '100vh', flexShrink: 0 }}
         >
@@ -138,9 +158,17 @@ export default function JourneyV4() {
                     }}
                     aria-hidden="true"
                   />
+                  {/* Text (unlike the diamond above) is still subject to
+                      WCAG contrast regardless of aria-hidden -- aria-hidden
+                      only removes it from the screen-reader tree, sighted
+                      users still see it, so this can't dim below ~0.9
+                      opacity the way the diamond's fill safely can. The
+                      diamond's solid-vs-outline fill already carries the
+                      revealed/not-revealed signal, so this label doesn't
+                      need its own dim state. */}
                   <span
                     className="font-mono text-[8px] tracking-wider"
-                    style={{ color: HEX[ACCENTS[i]], opacity: revealed.has(i) ? 0.9 : 0.3 }}
+                    style={{ color: HEX[ACCENTS[i]] }}
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
@@ -162,8 +190,12 @@ export default function JourneyV4() {
             <p className="text-mist text-lg max-w-md leading-relaxed">
               Five roles, five different problems. Scroll through the story.
             </p>
+            <p className="font-mono text-sm text-mist mt-6">
+              <span className="text-cyan">brent@portfolio</span>
+              <span className="text-mist">:~$</span> git log --oneline --all
+            </p>
             <div className="flex items-center gap-3 mt-8">
-              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-mist/50">Scroll</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-mist">Scroll</span>
               <div className="w-16 h-px bg-cyan/40" />
             </div>
           </section>
@@ -184,7 +216,7 @@ export default function JourneyV4() {
                   style={{
                     opacity: show ? 1 : 0,
                     transform: show ? 'translateX(0)' : 'translateX(-24px)',
-                    transition: 'opacity 0.7s ease, transform 0.7s ease',
+                    transition: noAnimate.has(i) ? 'none' : 'opacity 0.7s ease, transform 0.7s ease',
                   }}
                 >
                   {/* Faceted border */}
