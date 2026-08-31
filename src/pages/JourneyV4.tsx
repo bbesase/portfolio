@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { journey } from '../data/journey'
 import { Link } from '../router'
+import LowPolyV3 from '../components/LowPolyV3'
 
 const ACCENTS = ['volt', 'cyan', 'violet', 'volt', 'cyan'] as const
 type Accent = (typeof ACCENTS)[number]
@@ -102,6 +103,15 @@ export default function JourneyV4() {
 
   return (
     <div className="min-h-screen bg-ink text-paper">
+      {/* Fixed, very low-opacity faceted mesh -- fills the empty space
+          beside the reading column on wide viewports, and ties this page
+          visually back to the Hero's signature background. Stays put while
+          content scrolls over it (fixed, not absolute), so it covers
+          whatever's in view at any scroll position, not just the top. */}
+      <div className="fixed inset-0 pointer-events-none">
+        <LowPolyV3 className="opacity-[0.08]" />
+      </div>
+
       {/* Fixed header with prominent progress */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur bg-ink/90 border-b border-line">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -134,7 +144,7 @@ export default function JourneyV4() {
         </div>
       </header>
 
-      <main className="flex">
+      <main className="relative z-10 flex">
         {/* Sticky left sidebar timeline -- purely decorative, duplicates info
             already in each chapter's own heading and dates below */}
         <div
