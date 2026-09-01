@@ -191,7 +191,7 @@ export default function JourneyV4() {
         {/* Main content */}
         <div className="flex-1 min-w-0">
           {/* Hero */}
-          <section className="px-6 lg:px-12 pt-32 pb-20">
+          <section className="px-6 lg:px-12 pt-32 pb-20 lg:ml-[14rem]">
             <p className="eyebrow mb-6">My Journey</p>
             <h1 className="font-display font-semibold leading-none mb-8">
               <span className="block text-5xl sm:text-7xl text-paper">Where I've worked,</span>
@@ -211,7 +211,7 @@ export default function JourneyV4() {
           </section>
 
           {/* Chapters -- single column, ~18% wider than the original max-w-4xl */}
-          <div className="px-6 lg:px-12 pb-24 space-y-12 max-w-[66rem]">
+          <div className="px-6 lg:px-12 pb-24 space-y-12 max-w-[72rem] lg:ml-[14rem]">
             {journey.map((ch, i) => {
               const accent = ACCENTS[i]
               const show = revealed.has(i)
