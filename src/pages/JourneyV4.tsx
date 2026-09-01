@@ -210,13 +210,11 @@ export default function JourneyV4() {
             </div>
           </section>
 
-          {/* Chapters -- alternating left/right, experimental per user request */}
-          <div className="px-6 lg:px-12 pb-24 space-y-12">
+          {/* Chapters -- single column, ~18% wider than the original max-w-4xl */}
+          <div className="px-6 lg:px-12 pb-24 space-y-12 max-w-[66rem]">
             {journey.map((ch, i) => {
               const accent = ACCENTS[i]
               const show = revealed.has(i)
-              const onRight = i % 2 === 1
-              const hiddenOffset = onRight ? 24 : -24
 
               return (
                 <section
@@ -224,10 +222,10 @@ export default function JourneyV4() {
                   ref={(el) => { refs.current[i] = el }}
                   data-idx={i}
                   aria-labelledby={`v4-ch-${i}`}
-                  className={`relative bg-panel overflow-hidden rounded-sm max-w-2xl ${onRight ? 'ml-auto' : ''}`}
+                  className="relative bg-panel overflow-hidden rounded-sm"
                   style={{
                     opacity: show ? 1 : 0,
-                    transform: show ? 'translateX(0)' : `translateX(${hiddenOffset}px)`,
+                    transform: show ? 'translateX(0)' : 'translateX(-24px)',
                     transition: noAnimate.has(i) ? 'none' : 'opacity 0.7s ease, transform 0.7s ease',
                   }}
                 >
