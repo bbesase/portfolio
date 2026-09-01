@@ -69,9 +69,40 @@ export default function JourneyV4() {
   // chapters' entrance transition is suppressed -- chapters revealed later
   // by actually scrolling still animate normally.
   const [noAnimate, setNoAnimate] = useState<Set<number>>(() => new Set())
+  // Where each chapter actually sits on the page, as a % of total page
+  // height -- drives the sidebar diamonds' vertical position so diamond 01
+  // lines up with roughly where chapter 1 really starts instead of being
+  // evenly spaced across one screen height regardless of real content
+  // length. Defaults to an even spread so there's a sane layout before the
+  // first measurement lands.
+  const [dotPercents, setDotPercents] = useState<number[]>(() =>
+    journey.map((_, i) => (i / Math.max(1, journey.length - 1)) * 100)
+  )
   const refs = useRef<(HTMLElement | null)[]>([])
 
   const current = intersecting.size > 0 ? Math.max(...intersecting) : (revealed.size > 0 ? Math.max(...revealed) : 0)
+
+  useEffect(() => {
+    const measure = () => {
+      const totalHeight = document.documentElement.scrollHeight
+      if (totalHeight <= 0) return
+      setDotPercents(refs.current.map((el) => {
+        if (!el) return 0
+        const top = el.getBoundingClientRect().top + window.scrollY
+        return Math.min(100, Math.max(0, (top / totalHeight) * 100))
+      }))
+    }
+    // Chapter heights don't change from the reveal transition (only
+    // opacity/translateX, not layout), so one post-mount measurement plus
+    // remeasuring on resize (responsive reflow can change chapter heights)
+    // is enough -- no need to hook this into scroll.
+    const raf = requestAnimationFrame(measure)
+    window.addEventListener('resize', measure)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', measure)
+    }
+  }, [])
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -152,12 +183,17 @@ export default function JourneyV4() {
           className="hidden lg:flex flex-col items-center gap-0 sticky top-0 self-start"
           style={{ width: 80, paddingTop: 72 + 24, height: '100vh', flexShrink: 0 }}
         >
-          <div className="relative flex flex-col items-center flex-1">
-            {/* Vertical line */}
-            <div className="absolute top-8 bottom-8 left-1/2 -translate-x-1/2 w-px bg-line" aria-hidden="true" />
-            <div className="flex flex-col justify-around flex-1 w-full items-center py-4 z-10">
+          <div className="relative w-full flex-1">
+            {/* Line and diamonds share this inset box so a diamond's 0-100%
+                position maps directly onto the line's own rendered range. */}
+            <div className="absolute inset-x-0 top-8 bottom-8">
+              <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-px bg-line" aria-hidden="true" />
               {journey.map((_, i) => (
-                <div key={i} className="flex flex-col items-center gap-1">
+                <div
+                  key={i}
+                  className="absolute left-1/2 flex flex-col items-center gap-1 z-10"
+                  style={{ top: `${dotPercents[i] ?? 0}%`, transform: 'translate(-50%, -50%)' }}
+                >
                   <div
                     style={{
                       width: 18, height: 18,
