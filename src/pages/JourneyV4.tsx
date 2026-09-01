@@ -59,7 +59,13 @@ export default function JourneyV4() {
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   const [revealed, setRevealed] = useState<Set<number>>(() => reducedMotion() ? allIndices() : new Set())
-  const [intersecting, setIntersecting] = useState<Set<number>>(() => reducedMotion() ? allIndices() : new Set())
+  // Which chapter is "current" (drives both the header's mini progress row
+  // and the sidebar diamonds) -- only updates while at least one chapter
+  // is majority-visible, and holds its last value through the brief gap
+  // between one chapter dropping below 50% and the next rising past it,
+  // rather than snapping to whatever was merely glimpsed.
+  const [current, setCurrent] = useState<number>(() => reducedMotion() ? journey.length - 1 : 0)
+  const majorityVisible = useRef<Set<number>>(new Set())
   // Chapters already in the initial viewport on load (varies by viewport
   // height -- taller screens can fit more than just chapter 0) shouldn't
   // wait on a 700ms transition to become visible: that's a needless pop-in
@@ -82,8 +88,6 @@ export default function JourneyV4() {
   })
   const refs = useRef<(HTMLElement | null)[]>([])
   const trackRef = useRef<HTMLDivElement | null>(null)
-
-  const current = intersecting.size > 0 ? Math.max(...intersecting) : (revealed.size > 0 ? Math.max(...revealed) : 0)
 
   useEffect(() => {
     const measure = () => {
@@ -123,6 +127,19 @@ export default function JourneyV4() {
     // elements already in the viewport when observe() is called -- reuse
     // that first batch to detect "already visible on load" instead of a
     // separate DOM-measuring effect.
+    //
+    // Two different bars for two different things: `revealed` (the card's
+    // own fade-in) fires as soon as any sliver of it shows, same as
+    // before. `current` (which drives which diamond is lit in both the
+    // header and sidebar) requires the majority of the card to actually
+    // be on screen -- otherwise a card whose header just peeks into view
+    // at the bottom of a tall viewport lights up its diamond before
+    // there's anything to read. It only advances while something clears
+    // that bar, holding its last value through the brief gap where one
+    // card has dropped below 50% and the next hasn't risen past it yet
+    // (rather than falling back to whatever was merely glimpsed). Both
+    // thresholds have to be registered on the observer for the callback
+    // to fire at each crossing.
     let firstBatch = true
     const obs = new IntersectionObserver((entries) => {
       const initial = new Set<number>()
@@ -131,14 +148,14 @@ export default function JourneyV4() {
         if (e.isIntersecting) {
           if (firstBatch) initial.add(idx)
           setRevealed((p) => new Set([...p, idx]))
-          setIntersecting((p) => new Set([...p, idx]))
-        } else {
-          setIntersecting((p) => { const n = new Set(p); n.delete(idx); return n })
         }
+        if (e.intersectionRatio >= 0.5) majorityVisible.current.add(idx)
+        else majorityVisible.current.delete(idx)
       })
+      if (majorityVisible.current.size > 0) setCurrent(Math.max(...majorityVisible.current))
       if (firstBatch && initial.size) setNoAnimate(initial)
       firstBatch = false
-    }, { threshold: 0.12 })
+    }, { threshold: [0.12, 0.5] })
     refs.current.forEach((r) => r && obs.observe(r))
     return () => obs.disconnect()
   }, [])
