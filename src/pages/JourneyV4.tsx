@@ -69,27 +69,40 @@ export default function JourneyV4() {
   // chapters' entrance transition is suppressed -- chapters revealed later
   // by actually scrolling still animate normally.
   const [noAnimate, setNoAnimate] = useState<Set<number>>(() => new Set())
-  // Where each chapter actually sits on the page, as a % of total page
-  // height -- drives the sidebar diamonds' vertical position so diamond 01
-  // lines up with roughly where chapter 1 really starts instead of being
-  // evenly spaced across one screen height regardless of real content
-  // length. Defaults to an even spread so there's a sane layout before the
+  // Pixel offset of each chapter's diamond within the sidebar's track (the
+  // ref'd div below). Diamond 01 is anchored to chapter 1's real on-page
+  // position -- so it starts level with the first card, not at the very
+  // top of the sticky rail -- and the rest are spaced proportionally to
+  // real chapter length, compressed to fit under it. Defaults to an even
+  // spread over a rough viewport-height guess so layout is sane before the
   // first measurement lands.
-  const [dotPercents, setDotPercents] = useState<number[]>(() =>
-    journey.map((_, i) => (i / Math.max(1, journey.length - 1)) * 100)
-  )
+  const [dotOffsets, setDotOffsets] = useState<number[]>(() => {
+    const approxTrack = Math.max(200, window.innerHeight - 200)
+    return journey.map((_, i) => (i / Math.max(1, journey.length - 1)) * approxTrack)
+  })
   const refs = useRef<(HTMLElement | null)[]>([])
+  const trackRef = useRef<HTMLDivElement | null>(null)
 
   const current = intersecting.size > 0 ? Math.max(...intersecting) : (revealed.size > 0 ? Math.max(...revealed) : 0)
 
   useEffect(() => {
     const measure = () => {
-      const totalHeight = document.documentElement.scrollHeight
-      if (totalHeight <= 0) return
-      setDotPercents(refs.current.map((el) => {
-        if (!el) return 0
-        const top = el.getBoundingClientRect().top + window.scrollY
-        return Math.min(100, Math.max(0, (top / totalHeight) * 100))
+      const trackEl = trackRef.current
+      if (!trackEl || refs.current.some((r) => !r)) return
+      const trackRect = trackEl.getBoundingClientRect()
+      const trackTop = trackRect.top + window.scrollY
+      const trackHeight = trackRect.height
+      const chapterTops = refs.current.map((el) => el!.getBoundingClientRect().top + window.scrollY)
+      const firstTop = chapterTops[0]
+      const lastTop = chapterTops[chapterTops.length - 1]
+      const span = Math.max(1, lastTop - firstTop)
+
+      const firstOffset = Math.min(trackHeight, Math.max(0, firstTop - trackTop))
+      const availableBelow = Math.max(1, trackHeight - firstOffset)
+
+      setDotOffsets(chapterTops.map((t) => {
+        const raw = firstOffset + ((t - firstTop) / span) * availableBelow
+        return Math.min(trackHeight, Math.max(0, raw))
       }))
     }
     // Chapter heights don't change from the reveal transition (only
@@ -184,20 +197,20 @@ export default function JourneyV4() {
           style={{ width: 80, paddingTop: 72 + 24, height: '100vh', flexShrink: 0 }}
         >
           <div className="relative w-full flex-1">
-            {/* Line and diamonds share this inset box so a diamond's 0-100%
-                position maps directly onto the line's own rendered range. */}
-            <div className="absolute inset-x-0 top-8 bottom-8">
+            {/* Line and diamonds share this track div so a diamond's pixel
+                offset lines up directly with the line's own rendered range. */}
+            <div ref={trackRef} className="absolute inset-x-0 top-8 bottom-8">
               <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-px bg-line" aria-hidden="true" />
               {journey.map((_, i) => (
                 <div
                   key={i}
                   className="absolute left-1/2 flex flex-col items-center gap-1 z-10"
-                  style={{ top: `${dotPercents[i] ?? 0}%`, transform: 'translate(-50%, -50%)' }}
+                  style={{ top: dotOffsets[i] ?? 0, transform: 'translate(-50%, -50%)' }}
                 >
                   <div
                     style={{
                       width: 18, height: 18,
-                      background: revealed.has(i) ? HEX[ACCENTS[i]] : '#08070D',
+                      background: i <= current ? HEX[ACCENTS[i]] : '#08070D',
                       border: `2px solid ${HEX[ACCENTS[i]]}`,
                       clipPath: 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)',
                       transition: 'background-color 0.6s ease',
