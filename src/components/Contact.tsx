@@ -11,21 +11,21 @@ export default function Contact() {
           is email.
         </p>
         <a
-          href="mailto:you@example.com"
+          href="mailto:bbesase51@gmail.com"
           className="inline-block rounded-full bg-volt text-ink font-medium px-8 py-3 hover:bg-cyan transition-colors"
         >
-          you@example.com
+          bbesase51@gmail.com
         </a>
         <div className="mt-10 flex justify-center gap-6 text-sm text-mist">
-          <a href="https://github.com/yourhandle" className="hover:text-cyan transition-colors">
+          <a href="https://github.com/bbesase" className="text-mist hover:text-cyan transition-colors">
             GitHub
           </a>
-          <a href="https://linkedin.com/in/yourhandle" className="hover:text-cyan transition-colors">
+          <a href="https://www.linkedin.com/in/brent-besase/" className="text-mist hover:text-cyan transition-colors">
             LinkedIn
           </a>
         </div>
       </div>
-      <footer className="mt-24 text-center text-xs text-mist/70 font-mono">
+      <footer className="mt-24 text-center text-xs text-mist font-mono">
         Built with React, Tailwind, and Claude Code.
       </footer>
     </section>
