@@ -6,19 +6,24 @@ export default function Projects() {
       <div className="max-w-6xl mx-auto px-6 pb-10">
         <p className="eyebrow mb-4">Projects</p>
         <h2 className="font-display text-3xl sm:text-4xl font-semibold mb-14 max-w-xl">
-          A few things I've shipped.
+          A few things I've worked on and shipped.
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p) => (
             <a
               key={p.title}
               href={p.href}
-              className="group block bg-panel2 border border-line rounded-2xl p-6 hover:border-cyan transition-colors"
+              className="group block bg-panel2 border border-line rounded-2xl p-6 text-paper no-underline hover:border-cyan transition-colors"
             >
               <h3 className="font-display text-xl font-semibold mb-2 group-hover:text-cyan transition-colors">
                 {p.title}
               </h3>
-              <p className="text-mist text-sm leading-relaxed mb-5">{p.blurb}</p>
+              {/* Fixed height reserves space for the longest current blurb
+                  (7 lines) so every card's tags start at the same Y right
+                  after it, regardless of how short a given blurb is.
+                  line-clamp-7 truncates with an ellipsis if a future blurb
+                  ever runs longer than that. */}
+              <p className="text-mist text-sm leading-relaxed mb-5 h-40 line-clamp-7">{p.blurb}</p>
               <ul className="flex flex-wrap gap-2">
                 {p.tags.map((t) => (
                   <li
