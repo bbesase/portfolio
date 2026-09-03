@@ -55,7 +55,15 @@ export default function LowPolyV3({ className = '' }: { className?: string }) {
 
     function onResize() { cancelAnimationFrame(raf); build(); raf = requestAnimationFrame(render) }
     window.addEventListener('resize', onResize)
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize) }
+    // buildMesh() (see lowPolyUtils.ts) reads --color-* CSS vars fresh each
+    // call, so rebuilding on a theme change repaints the mesh with the new
+    // palette -- reuses the same rebuild path as a resize.
+    window.addEventListener('themechange', onResize)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('themechange', onResize)
+    }
   }, [])
 
   return (
