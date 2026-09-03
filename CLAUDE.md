@@ -24,10 +24,32 @@ README's "Branching model" section for the full flow.
 
 ## Design tokens (do not invent new colors/fonts outside this list)
 
-- Colors: `ink` #08070D (bg), `panel` #121020, `panel2` #1A1730,
-  `line` #2A2640, `mist` #9691B0 (secondary text), `paper` #F3F1FA
-  (primary text), `volt` #FF5D5D (primary accent), `cyan` #3FE0D0
-  (secondary accent), `violet` #8B6BFF (tertiary accent, used sparingly).
+- Colors are theme-driven: the 9 named tokens below (`ink`, `panel`,
+  `panel2`, `line`, `mist`, `paper`, `volt`, `cyan`, `violet`) are CSS
+  custom properties (`--color-*` in `src/index.css`) that `tailwind.config.js`
+  points its `colors.*` entries at — so `bg-ink`/`text-volt`/etc. always
+  render whichever palette is active. `src/theme.ts` switches palettes at
+  runtime via a `data-theme` attribute on `<html>`, persisted to
+  localStorage, surfaced through the `<ThemePicker>` component in the site
+  header. Token *names* are fixed accent-role labels ("accent 1/2/3"), not
+  literal hue promises — each palette assigns its own hex to `volt`/`cyan`/
+  `violet`. Components should always reference the token name (a Tailwind
+  class, or `var(--color-*)` in inline styles), never a literal hex value,
+  so new UI stays theme-reactive.
+- **Sanctioned palettes** (add a new one here before using it anywhere —
+  don't hardcode an ad hoc palette in a component):
+  - `faceted-dark` (default) — ink #08070D, panel #121020, panel2 #1A1730,
+    line #2A2640, mist #9691B0, paper #F3F1FA, volt #FF5D5D, cyan #3FE0D0,
+    violet #8B6BFF.
+  - `solar-flare` — ink #0F0904, panel #1C120A, panel2 #2A1B10,
+    line #4A331F, mist #C2A78D, paper #FDF3E7, volt #FF7A45, cyan #FFC857,
+    violet #FF6F91.
+  - `deep-ocean` — ink #05080D, panel #0D1620, panel2 #142230,
+    line #223A4E, mist #93ACC0, paper #EAF3F8, volt #38BDF8, cyan #5EEAD4,
+    violet #A78BFA.
+  - `midnight-violet` — ink #0A0714, panel #150F24, panel2 #1E1636,
+    line #332954, mist #A79FC4, paper #F5F2FA, volt #B98CFF, cyan #FF6FA5,
+    violet #4FD8C4.
 - Type: `font-display` (Space Grotesk, headings), `font-body` (Inter, body
   copy), `font-mono` (JetBrains Mono, labels/eyebrows/code).
 - Geometric motif: angled section dividers (`facet-divider` /

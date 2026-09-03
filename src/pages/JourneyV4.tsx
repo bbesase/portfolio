@@ -3,11 +3,13 @@ import { useEffect, useRef, useState } from 'react'
 import { journey } from '../data/journey'
 import { Link } from '../router'
 import LowPolyV3 from '../components/LowPolyV3'
+import ThemePicker from '../components/ThemePicker'
 
 const ACCENTS = ['volt', 'cyan', 'violet', 'volt', 'cyan'] as const
 type Accent = (typeof ACCENTS)[number]
 
-const HEX: Record<Accent, string> = { volt: '#FF5D5D', cyan: '#3FE0D0', violet: '#8B6BFF' }
+// CSS var refs, not literal hex, so these inline styles stay theme-reactive.
+const HEX: Record<Accent, string> = { volt: 'var(--color-volt)', cyan: 'var(--color-cyan)', violet: 'var(--color-violet)' }
 const CLS: Record<Accent, string> = { volt: 'text-volt', cyan: 'text-cyan', violet: 'text-violet' }
 
 type Item = { tech: string; x: number; y: number; rotate: number; size: number }
@@ -179,6 +181,7 @@ export default function JourneyV4() {
           <Link to="/" className="font-display font-semibold tracking-tight">
             Brent<span className="text-volt">Besase</span>
           </Link>
+          <div className="flex items-center gap-5">
           <div
             aria-live="polite"
             aria-label={`Chapter ${current + 1} of ${journey.length}`}
@@ -192,7 +195,7 @@ export default function JourneyV4() {
                 style={{
                   width: 8, height: 8,
                   background: i <= current ? HEX[ACCENTS[i]] : 'transparent',
-                  border: `1.5px solid ${i <= current ? HEX[ACCENTS[i]] : '#2A2640'}`,
+                  border: `1.5px solid ${i <= current ? HEX[ACCENTS[i]] : 'var(--color-line)'}`,
                   clipPath: 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)',
                   transition: 'background-color 0.4s, border-color 0.4s',
                 }}
@@ -201,6 +204,8 @@ export default function JourneyV4() {
             <span className="font-mono text-xs text-mist tracking-widest ml-2">
               {pad(current)}&nbsp;/&nbsp;{String(journey.length).padStart(2, '0')}
             </span>
+          </div>
+          <ThemePicker />
           </div>
         </div>
       </header>
@@ -227,7 +232,7 @@ export default function JourneyV4() {
                   <div
                     style={{
                       width: 18, height: 18,
-                      background: i <= current ? HEX[ACCENTS[i]] : '#08070D',
+                      background: i <= current ? HEX[ACCENTS[i]] : 'var(--color-ink)',
                       border: `2px solid ${HEX[ACCENTS[i]]}`,
                       clipPath: 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)',
                       transition: 'background-color 0.6s ease',

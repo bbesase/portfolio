@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from '../router'
+import ThemePicker from './ThemePicker'
 
 const links = [
   { href: '#about', label: 'About' },
@@ -37,7 +38,8 @@ export default function Nav() {
             </Link>
           </li>
         </ul>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <ThemePicker />
           <a
             href="#contact"
             className="text-sm font-medium border border-volt text-volt rounded-full px-4 py-1.5 hover:bg-volt hover:text-ink transition-colors"
