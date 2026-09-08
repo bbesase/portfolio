@@ -9,15 +9,23 @@ const links = [
   { href: '#contact', label: 'Contact' },
 ]
 
-// Shared hover/focus "flair" for every nav link: a cyan underline that
-// sweeps in from the left with an angled (not flat) trailing edge, matching
-// the site's faceted-not-rectangular identity. Lives on `group` links via
-// group-hover/group-focus-visible so keyboard users get the same cue as
-// mouse users, not just a color change.
+// Shared hover/focus "flair" for every nav link: the text lights up cyan
+// via a clip-path reveal that grows from the right edge toward the left,
+// while the underline below it grows the opposite way (left toward right)
+// -- two motions crossing rather than matching. The lit-up copy is a
+// duplicate, aria-hidden overlay directly on top of the real (always-
+// visible, always-accessible) label; only its clip-path animates, so
+// screen readers only ever see the one real label underneath.
 function NavLinkContent({ label }: { label: string }) {
   return (
     <>
       {label}
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 text-cyan [clip-path:inset(0_0_0_100%)] transition-[clip-path] duration-300 ease-out group-hover:[clip-path:inset(0_0_0_0%)] group-focus-visible:[clip-path:inset(0_0_0_0%)]"
+      >
+        {label}
+      </span>
       <span
         aria-hidden="true"
         className="absolute inset-x-0 -bottom-0.5 h-[2px] origin-left scale-x-0 bg-cyan transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100"
@@ -44,14 +52,14 @@ export default function Nav() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="group relative inline-block text-sm text-mist hover:text-cyan transition-colors py-1"
+                className="group relative inline-block text-sm text-mist py-1"
               >
                 <NavLinkContent label={l.label} />
               </a>
             </li>
           ))}
           <li>
-            <Link to="/journey" className="group relative inline-block text-sm text-mist hover:text-cyan transition-colors py-1">
+            <Link to="/journey" className="group relative inline-block text-sm text-mist py-1">
               <NavLinkContent label="My Journey" />
             </Link>
           </li>
@@ -102,7 +110,7 @@ export default function Nav() {
               <a
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="group relative block py-2 text-sm text-mist hover:text-cyan transition-colors"
+                className="group relative block py-2 text-sm text-mist"
               >
                 <NavLinkContent label={l.label} />
               </a>
@@ -112,7 +120,7 @@ export default function Nav() {
             <Link
               to="/journey"
               onClick={() => setOpen(false)}
-              className="group relative block py-2 text-sm text-mist hover:text-cyan transition-colors"
+              className="group relative block py-2 text-sm text-mist"
             >
               <NavLinkContent label="My Journey" />
             </Link>

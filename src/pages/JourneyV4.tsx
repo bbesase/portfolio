@@ -343,7 +343,7 @@ export default function JourneyV4() {
           </div>
 
           <div className="px-6 lg:px-12 pb-16">
-            <Link to="/" className="inline-block rounded-full border border-line text-paper font-medium px-6 py-3 hover:border-cyan hover:text-cyan transition-colors">
+            <Link to="/" className="inline-block rounded-full border border-line bg-ink/60 backdrop-blur-sm text-paper font-medium px-6 py-3 hover:border-cyan hover:text-cyan transition-colors">
               Back home
             </Link>
           </div>
