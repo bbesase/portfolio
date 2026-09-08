@@ -34,7 +34,7 @@ export const THEMES: Theme[] = [
     colors: {
       ink: '#0F0904', panel: '#1C120A', panel2: '#2A1B10', line: '#4A331F',
       mist: '#C2A78D', paper: '#FDF3E7',
-      volt: '#FF7A45', cyan: '#FFC857', violet: '#FF6F91',
+      volt: '#E8642C', cyan: '#DDA53B', violet: '#D9506F',
     },
   },
   {
@@ -43,7 +43,7 @@ export const THEMES: Theme[] = [
     colors: {
       ink: '#05080D', panel: '#0D1620', panel2: '#142230', line: '#223A4E',
       mist: '#93ACC0', paper: '#EAF3F8',
-      volt: '#38BDF8', cyan: '#5EEAD4', violet: '#A78BFA',
+      volt: '#2E97D4', cyan: '#3FB79E', violet: '#7C6FE0',
     },
   },
   {
@@ -52,7 +52,7 @@ export const THEMES: Theme[] = [
     colors: {
       ink: '#0A0714', panel: '#150F24', panel2: '#1E1636', line: '#332954',
       mist: '#A79FC4', paper: '#F5F2FA',
-      volt: '#B98CFF', cyan: '#FF6FA5', violet: '#4FD8C4',
+      volt: '#A375E8', cyan: '#E0619A', violet: '#3FBFA8',
     },
   },
 ]

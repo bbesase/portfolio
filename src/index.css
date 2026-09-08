@@ -24,9 +24,9 @@
     --color-line: #4A331F;
     --color-mist: #C2A78D;
     --color-paper: #FDF3E7;
-    --color-volt: #FF7A45;
-    --color-cyan: #FFC857;
-    --color-violet: #FF6F91;
+    --color-volt: #E8642C;
+    --color-cyan: #DDA53B;
+    --color-violet: #D9506F;
   }
   [data-theme="deep-ocean"] {
     --color-ink: #05080D;
@@ -35,9 +35,9 @@
     --color-line: #223A4E;
     --color-mist: #93ACC0;
     --color-paper: #EAF3F8;
-    --color-volt: #38BDF8;
-    --color-cyan: #5EEAD4;
-    --color-violet: #A78BFA;
+    --color-volt: #2E97D4;
+    --color-cyan: #3FB79E;
+    --color-violet: #7C6FE0;
   }
   [data-theme="midnight-violet"] {
     --color-ink: #0A0714;
@@ -46,9 +46,9 @@
     --color-line: #332954;
     --color-mist: #A79FC4;
     --color-paper: #F5F2FA;
-    --color-volt: #B98CFF;
-    --color-cyan: #FF6FA5;
-    --color-violet: #4FD8C4;
+    --color-volt: #A375E8;
+    --color-cyan: #E0619A;
+    --color-violet: #3FBFA8;
   }
   html {
     scroll-behavior: smooth;

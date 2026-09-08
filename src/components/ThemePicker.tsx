@@ -41,12 +41,16 @@ export default function ThemePicker() {
         onClick={() => setOpen((v) => !v)}
         className="p-2 -m-2 text-mist hover:text-paper transition-colors"
       >
+        {/* The ring stays a neutral currentColor outline, but the 4 dots
+            are filled from the live --color-* vars -- so the icon is a
+            literal, always-current swatch of the active palette, not just
+            a static glyph, and pops against the muted ring by contrast. */}
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
           <circle cx="10" cy="10" r="7.25" stroke="currentColor" strokeWidth="1.5" />
-          <circle cx="7" cy="7.25" r="1.35" fill="currentColor" />
-          <circle cx="12.75" cy="6.75" r="1.35" fill="currentColor" />
-          <circle cx="13.5" cy="12.25" r="1.35" fill="currentColor" />
-          <circle cx="7.25" cy="13" r="1.35" fill="currentColor" />
+          <circle cx="7" cy="7.25" r="1.6" style={{ fill: 'var(--color-volt)' }} />
+          <circle cx="12.75" cy="6.75" r="1.6" style={{ fill: 'var(--color-cyan)' }} />
+          <circle cx="13.5" cy="12.25" r="1.6" style={{ fill: 'var(--color-violet)' }} />
+          <circle cx="7.25" cy="13" r="1.6" style={{ fill: 'var(--color-volt)' }} />
         </svg>
       </button>
       {open && (

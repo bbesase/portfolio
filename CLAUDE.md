@@ -42,14 +42,19 @@ README's "Branching model" section for the full flow.
     line #2A2640, mist #9691B0, paper #F3F1FA, volt #FF5D5D, cyan #3FE0D0,
     violet #8B6BFF.
   - `solar-flare` — ink #0F0904, panel #1C120A, panel2 #2A1B10,
-    line #4A331F, mist #C2A78D, paper #FDF3E7, volt #FF7A45, cyan #FFC857,
-    violet #FF6F91.
+    line #4A331F, mist #C2A78D, paper #FDF3E7, volt #E8642C, cyan #DDA53B,
+    violet #D9506F.
   - `deep-ocean` — ink #05080D, panel #0D1620, panel2 #142230,
-    line #223A4E, mist #93ACC0, paper #EAF3F8, volt #38BDF8, cyan #5EEAD4,
-    violet #A78BFA.
+    line #223A4E, mist #93ACC0, paper #EAF3F8, volt #2E97D4, cyan #3FB79E,
+    violet #7C6FE0.
   - `midnight-violet` — ink #0A0714, panel #150F24, panel2 #1E1636,
-    line #332954, mist #A79FC4, paper #F5F2FA, volt #B98CFF, cyan #FF6FA5,
-    violet #4FD8C4.
+    line #332954, mist #A79FC4, paper #F5F2FA, volt #A375E8, cyan #E0619A,
+    violet #3FBFA8.
+  - Accent lightness is deliberately kept close to `faceted-dark`'s (not
+    just AA-passing on a flat background) — the Hero's low-poly mesh
+    renders behind text at full opacity, and an accent color noticeably
+    brighter than the default's makes that mesh compete with the text on
+    top of it, not just fail a flat contrast check.
 - Type: `font-display` (Space Grotesk, headings), `font-body` (Inter, body
   copy), `font-mono` (JetBrains Mono, labels/eyebrows/code).
 - Geometric motif: angled section dividers (`facet-divider` /
