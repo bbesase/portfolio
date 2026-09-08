@@ -32,9 +32,9 @@ export const THEMES: Theme[] = [
     id: 'cherry-blossom',
     label: 'Cherry Blossom',
     colors: {
-      ink: '#150B10', panel: '#22131B', panel2: '#301C27', line: '#4E3040',
-      mist: '#C7A2B2', paper: '#FCF1F4',
-      volt: '#E87B9E', cyan: '#E0B15C', violet: '#8FAE7A',
+      ink: '#FBF1EE', panel: '#F5E4DE', panel2: '#ECD3C7', line: '#DCB9AC',
+      mist: '#71494D', paper: '#2A151A',
+      volt: '#A32E58', cyan: '#7A5714', violet: '#356333',
     },
   },
   {

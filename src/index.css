@@ -18,15 +18,15 @@
     --color-violet: #8B6BFF;
   }
   [data-theme="cherry-blossom"] {
-    --color-ink: #150B10;
-    --color-panel: #22131B;
-    --color-panel2: #301C27;
-    --color-line: #4E3040;
-    --color-mist: #C7A2B2;
-    --color-paper: #FCF1F4;
-    --color-volt: #E87B9E;
-    --color-cyan: #E0B15C;
-    --color-violet: #8FAE7A;
+    --color-ink: #FBF1EE;
+    --color-panel: #F5E4DE;
+    --color-panel2: #ECD3C7;
+    --color-line: #DCB9AC;
+    --color-mist: #71494D;
+    --color-paper: #2A151A;
+    --color-volt: #A32E58;
+    --color-cyan: #7A5714;
+    --color-violet: #356333;
   }
   [data-theme="deep-ocean"] {
     --color-ink: #05080D;
