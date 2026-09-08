@@ -9,6 +9,24 @@ const links = [
   { href: '#contact', label: 'Contact' },
 ]
 
+// Shared hover/focus "flair" for every nav link: a cyan underline that
+// sweeps in from the left with an angled (not flat) trailing edge, matching
+// the site's faceted-not-rectangular identity. Lives on `group` links via
+// group-hover/group-focus-visible so keyboard users get the same cue as
+// mouse users, not just a color change.
+function NavLinkContent({ label }: { label: string }) {
+  return (
+    <>
+      {label}
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 -bottom-0.5 h-[2px] origin-left scale-x-0 bg-cyan transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100"
+        style={{ clipPath: 'polygon(0 0, 100% 0, 94% 100%, 0 100%)' }}
+      />
+    </>
+  )
+}
+
 export default function Nav() {
   const [open, setOpen] = useState(false)
 
@@ -26,15 +44,15 @@ export default function Nav() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="text-sm text-mist hover:text-cyan transition-colors"
+                className="group relative inline-block text-sm text-mist hover:text-cyan transition-colors py-1"
               >
-                {l.label}
+                <NavLinkContent label={l.label} />
               </a>
             </li>
           ))}
           <li>
-            <Link to="/journey" className="text-sm text-mist hover:text-cyan transition-colors">
-              My Journey
+            <Link to="/journey" className="group relative inline-block text-sm text-mist hover:text-cyan transition-colors py-1">
+              <NavLinkContent label="My Journey" />
             </Link>
           </li>
         </ul>
@@ -84,9 +102,9 @@ export default function Nav() {
               <a
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block py-2 text-sm text-mist hover:text-cyan transition-colors"
+                className="group relative block py-2 text-sm text-mist hover:text-cyan transition-colors"
               >
-                {l.label}
+                <NavLinkContent label={l.label} />
               </a>
             </li>
           ))}
@@ -94,9 +112,9 @@ export default function Nav() {
             <Link
               to="/journey"
               onClick={() => setOpen(false)}
-              className="block py-2 text-sm text-mist hover:text-cyan transition-colors"
+              className="group relative block py-2 text-sm text-mist hover:text-cyan transition-colors"
             >
-              My Journey
+              <NavLinkContent label="My Journey" />
             </Link>
           </li>
         </ul>
