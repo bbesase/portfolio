@@ -41,9 +41,9 @@ README's "Branching model" section for the full flow.
   - `faceted-dark` (default) — ink #08070D, panel #121020, panel2 #1A1730,
     line #2A2640, mist #9691B0, paper #F3F1FA, volt #FF5D5D, cyan #3FE0D0,
     violet #8B6BFF.
-  - `solar-flare` — ink #0F0904, panel #1C120A, panel2 #2A1B10,
-    line #4A331F, mist #C2A78D, paper #FDF3E7, volt #E8642C, cyan #DDA53B,
-    violet #D9506F.
+  - `cherry-blossom` — ink #150B10, panel #22131B, panel2 #301C27,
+    line #4E3040, mist #C7A2B2, paper #FCF1F4, volt #E87B9E (sakura pink),
+    cyan #E0B15C (stamen gold), violet #8FAE7A (leaf sage).
   - `deep-ocean` — ink #05080D, panel #0D1620, panel2 #142230,
     line #223A4E, mist #93ACC0, paper #EAF3F8, volt #2E97D4, cyan #3FB79E,
     violet #7C6FE0.

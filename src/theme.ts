@@ -4,7 +4,7 @@
 // (mirroring router.tsx's style) is simpler than a Provider tree.
 import { useEffect, useState } from 'react'
 
-export type ThemeId = 'faceted-dark' | 'solar-flare' | 'deep-ocean' | 'midnight-violet'
+export type ThemeId = 'faceted-dark' | 'cherry-blossom' | 'deep-ocean' | 'midnight-violet'
 
 export type Theme = {
   id: ThemeId
@@ -29,12 +29,12 @@ export const THEMES: Theme[] = [
     },
   },
   {
-    id: 'solar-flare',
-    label: 'Solar Flare',
+    id: 'cherry-blossom',
+    label: 'Cherry Blossom',
     colors: {
-      ink: '#0F0904', panel: '#1C120A', panel2: '#2A1B10', line: '#4A331F',
-      mist: '#C2A78D', paper: '#FDF3E7',
-      volt: '#E8642C', cyan: '#DDA53B', violet: '#D9506F',
+      ink: '#150B10', panel: '#22131B', panel2: '#301C27', line: '#4E3040',
+      mist: '#C7A2B2', paper: '#FCF1F4',
+      volt: '#E87B9E', cyan: '#E0B15C', violet: '#8FAE7A',
     },
   },
   {

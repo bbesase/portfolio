@@ -4,7 +4,7 @@ test('theme picker opens and lists all themes', async ({ page }) => {
   await page.goto('/')
   const trigger = page.getByRole('button', { name: /choose color theme/i })
   await trigger.click()
-  await expect(page.getByRole('button', { name: 'Solar Flare' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Cherry Blossom' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Deep Ocean' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Midnight Violet' })).toBeVisible()
 })
@@ -24,8 +24,8 @@ test('selecting a theme applies it and persists across reload', async ({ page })
 test('theme choice persists when navigating from home to /journey', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /choose color theme/i }).click()
-  await page.getByRole('button', { name: 'Solar Flare' }).click()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'solar-flare')
+  await page.getByRole('button', { name: 'Cherry Blossom' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'cherry-blossom')
 
   const menuToggle = page.getByRole('button', { name: /menu/i })
   if (await menuToggle.isVisible()) {
@@ -33,16 +33,16 @@ test('theme choice persists when navigating from home to /journey', async ({ pag
   }
   await page.getByRole('link', { name: 'My Journey' }).click()
   await expect(page).toHaveURL(/\/journey$/)
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'solar-flare')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'cherry-blossom')
 })
 
 test('escape closes the picker and returns focus to the trigger', async ({ page }) => {
   await page.goto('/')
   const trigger = page.getByRole('button', { name: /choose color theme/i })
   await trigger.click()
-  await expect(page.getByRole('button', { name: 'Solar Flare' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Cherry Blossom' })).toBeVisible()
 
   await page.keyboard.press('Escape')
-  await expect(page.getByRole('button', { name: 'Solar Flare' })).not.toBeVisible()
+  await expect(page.getByRole('button', { name: 'Cherry Blossom' })).not.toBeVisible()
   await expect(trigger).toBeFocused()
 })
