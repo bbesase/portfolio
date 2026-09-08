@@ -41,18 +41,21 @@ README's "Branching model" section for the full flow.
   - `faceted-dark` (default) — ink #08070D, panel #121020, panel2 #1A1730,
     line #2A2640, mist #9691B0, paper #F3F1FA, volt #FF5D5D, cyan #3FE0D0,
     violet #8B6BFF.
-  - `cherry-blossom` (the one light theme — off-white blush base, dark
-    plum text; every other palette is dark-based) — ink #FBF1EE,
-    panel #F5E4DE, panel2 #ECD3C7, line #DCB9AC, mist #71494D,
-    paper #2A151A, volt #A32E58 (sakura pink), cyan #7A5714 (stamen gold),
-    violet #356333 (leaf sage). Accents are deepened well past the flat-bg
-    AA minimum for the same reason as the dark palettes' accents were
-    lightened past it — the low-poly mesh renders behind text at full
-    opacity, and here it's dark text over a light/colored mesh instead of
-    light text over a dark one, but the same local-contrast risk applies.
-  - `deep-ocean` — ink #05080D, panel #0D1620, panel2 #142230,
-    line #223A4E, mist #93ACC0, paper #EAF3F8, volt #2E97D4, cyan #3FB79E,
-    violet #7C6FE0.
+  - `cherry-blossom` (light — off-white blush base, dark plum text) —
+    ink #FBF1EE, panel #F5E4DE, panel2 #ECD3C7, line #DCB9AC,
+    mist #71494D, paper #2A151A, volt #A32E58 (sakura pink),
+    cyan #7A5714 (stamen gold), violet #356333 (leaf sage).
+  - `light-ocean` (light — pale sky/foam base, deep navy text) —
+    ink #EFF8FB, panel #E1F0F4, panel2 #CDE6EC, line #AFD3DE,
+    mist #3A5F6C, paper #0C232E, volt #146A96 (sea blue),
+    cyan #0E6D5A (deep teal), violet #5347B8 (indigo).
+  - Light palettes' accents are deepened well past the flat-bg AA minimum
+    for the same reason the dark palettes' accents were lightened past
+    it — the low-poly mesh renders behind text at full opacity, so a
+    color that merely clears contrast against a flat swatch can still
+    read poorly where text crosses a mesh triangle close to it in
+    luminance. Verify new/changed accents visually against the mesh, not
+    just via axe (which can't see the canvas overlap), before shipping.
   - `midnight-violet` — ink #0A0714, panel #150F24, panel2 #1E1636,
     line #332954, mist #A79FC4, paper #F5F2FA, volt #A375E8, cyan #E0619A,
     violet #3FBFA8.

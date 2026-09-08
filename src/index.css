@@ -28,16 +28,16 @@
     --color-cyan: #7A5714;
     --color-violet: #356333;
   }
-  [data-theme="deep-ocean"] {
-    --color-ink: #05080D;
-    --color-panel: #0D1620;
-    --color-panel2: #142230;
-    --color-line: #223A4E;
-    --color-mist: #93ACC0;
-    --color-paper: #EAF3F8;
-    --color-volt: #2E97D4;
-    --color-cyan: #3FB79E;
-    --color-violet: #7C6FE0;
+  [data-theme="light-ocean"] {
+    --color-ink: #EFF8FB;
+    --color-panel: #E1F0F4;
+    --color-panel2: #CDE6EC;
+    --color-line: #AFD3DE;
+    --color-mist: #3A5F6C;
+    --color-paper: #0C232E;
+    --color-volt: #146A96;
+    --color-cyan: #0E6D5A;
+    --color-violet: #5347B8;
   }
   [data-theme="midnight-violet"] {
     --color-ink: #0A0714;

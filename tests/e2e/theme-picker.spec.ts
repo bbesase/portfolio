@@ -5,20 +5,20 @@ test('theme picker opens and lists all themes', async ({ page }) => {
   const trigger = page.getByRole('button', { name: /choose color theme/i })
   await trigger.click()
   await expect(page.getByRole('button', { name: 'Cherry Blossom' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Deep Ocean' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Light Ocean' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Midnight Violet' })).toBeVisible()
 })
 
 test('selecting a theme applies it and persists across reload', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /choose color theme/i }).click()
-  await page.getByRole('button', { name: 'Deep Ocean' }).click()
+  await page.getByRole('button', { name: 'Light Ocean' }).click()
 
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'deep-ocean')
-  expect(await page.evaluate(() => localStorage.getItem('portfolio-theme'))).toBe('deep-ocean')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light-ocean')
+  expect(await page.evaluate(() => localStorage.getItem('portfolio-theme'))).toBe('light-ocean')
 
   await page.reload()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'deep-ocean')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light-ocean')
 })
 
 test('theme choice persists when navigating from home to /journey', async ({ page }) => {
