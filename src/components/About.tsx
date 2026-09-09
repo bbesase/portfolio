@@ -24,8 +24,9 @@ export default function About() {
             treating CI as the source of truth rather than "it worked on my machine."
           </p>
           <p>
-            Replace this paragraph with your own story: where you've worked, what
-            you care about, and what kind of problems you want to work on next.
+            Outside of work, I'm usually at a live show, playing some kind of sport,
+            or a few levels into a video game I probably shouldn't have started on a
+            weeknight.
           </p>
         </div>
       </div>
