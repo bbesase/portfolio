@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Link } from '../router'
+import ThemePicker from './ThemePicker'
 
 const links = [
   { href: '#about', label: 'About' },
@@ -7,6 +8,44 @@ const links = [
   { href: '#projects', label: 'Projects' },
   { href: '#contact', label: 'Contact' },
 ]
+
+// Shared hover/focus "flair" for every nav link: the text's own color wipes
+// from mist to cyan starting at the right edge and sweeping left, at the
+// same speed/easing as the underline below it growing left-to-right --
+// crossing motions rather than a flat color swap.
+//
+// This is a single text node, not a duplicate overlay layered on top of a
+// second copy: a hard-edge two-color background-clip:text gradient twice
+// the link's width, with only its background-position animating. A layered-
+// duplicate version of this was tried first and rejected -- the absolutely
+// positioned copy never quite lined up with the real text's rendering,
+// producing a ghosted/bulging look. This approach only ever paints glyphs
+// once, so that class of bug can't happen.
+const textWipeStyle: CSSProperties = {
+  backgroundImage: 'linear-gradient(to right, var(--color-mist) 50%, var(--color-cyan) 50%)',
+  backgroundSize: '200% 100%',
+}
+
+const textWipeClass =
+  'bg-clip-text text-transparent bg-[position:0%_0%] transition-[background-position] duration-300 ease-out group-hover:bg-[position:100%_0%] group-focus-visible:bg-[position:100%_0%]'
+
+function NavLinkContent({ label }: { label: string }) {
+  return (
+    <>
+      {/* group-hover:/group-focus-visible: only match a *descendant* of the
+          .group element, never the .group element itself -- so the wipe has
+          to live on this child span, not on the <a>/<Link> that carries
+          `group`. (The underline span below already got this right, which
+          is why it worked on the first attempt and this didn't.) */}
+      <span className={textWipeClass} style={textWipeStyle}>{label}</span>
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 -bottom-0.5 h-[2px] origin-left scale-x-0 bg-cyan transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100"
+        style={{ clipPath: 'polygon(0 0, 100% 0, 94% 100%, 0 100%)' }}
+      />
+    </>
+  )
+}
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
@@ -25,19 +64,20 @@ export default function Nav() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="text-sm text-mist hover:text-cyan transition-colors"
+                className="group relative inline-block text-sm py-1"
               >
-                {l.label}
+                <NavLinkContent label={l.label} />
               </a>
             </li>
           ))}
           <li>
-            <Link to="/journey" className="text-sm text-mist hover:text-cyan transition-colors">
-              My Journey
+            <Link to="/journey" className="group relative inline-block text-sm py-1">
+              <NavLinkContent label="My Journey" />
             </Link>
           </li>
         </ul>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <ThemePicker />
           <a
             href="#contact"
             className="text-sm font-medium border border-volt text-volt rounded-full px-4 py-1.5 hover:bg-volt hover:text-ink transition-colors"
@@ -82,9 +122,9 @@ export default function Nav() {
               <a
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block py-2 text-sm text-mist hover:text-cyan transition-colors"
+                className="group relative block py-2 text-sm"
               >
-                {l.label}
+                <NavLinkContent label={l.label} />
               </a>
             </li>
           ))}
@@ -92,9 +132,9 @@ export default function Nav() {
             <Link
               to="/journey"
               onClick={() => setOpen(false)}
-              className="block py-2 text-sm text-mist hover:text-cyan transition-colors"
+              className="group relative block py-2 text-sm"
             >
-              My Journey
+              <NavLinkContent label="My Journey" />
             </Link>
           </li>
         </ul>

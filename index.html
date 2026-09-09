@@ -11,6 +11,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body class="bg-ink text-paper font-body antialiased preload">
+    <script>
+      // Apply the stored theme before first paint, so returning visitors
+      // don't see a flash of the default palette before React mounts.
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          if (stored && stored !== 'faceted-dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          }
+        } catch (e) { /* localStorage unavailable (private mode, etc.) -- fall back to default */ }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
