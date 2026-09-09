@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  /* Faceted Dark -- the default palette. Alternates live under
+     [data-theme="..."] below; src/theme.ts sets that attribute and there's
+     no attribute (or an unrecognized one) for this default. */
   :root {
     --color-ink: #08070D;
     --color-panel: #121020;
@@ -14,15 +17,48 @@
     --color-cyan: #3FE0D0;
     --color-violet: #8B6BFF;
   }
+  [data-theme="cherry-blossom"] {
+    --color-ink: #FBF1EE;
+    --color-panel: #F5E4DE;
+    --color-panel2: #ECD3C7;
+    --color-line: #DCB9AC;
+    --color-mist: #71494D;
+    --color-paper: #2A151A;
+    --color-volt: #A32E58;
+    --color-cyan: #7A5714;
+    --color-violet: #356333;
+  }
+  [data-theme="light-ocean"] {
+    --color-ink: #EFF8FB;
+    --color-panel: #E1F0F4;
+    --color-panel2: #CDE6EC;
+    --color-line: #AFD3DE;
+    --color-mist: #3A5F6C;
+    --color-paper: #0C232E;
+    --color-volt: #146A96;
+    --color-cyan: #0E6D5A;
+    --color-violet: #5347B8;
+  }
+  [data-theme="midnight-violet"] {
+    --color-ink: #0A0714;
+    --color-panel: #150F24;
+    --color-panel2: #1E1636;
+    --color-line: #332954;
+    --color-mist: #A79FC4;
+    --color-paper: #F5F2FA;
+    --color-volt: #A375E8;
+    --color-cyan: #E0619A;
+    --color-violet: #3FBFA8;
+  }
   html {
     scroll-behavior: smooth;
   }
   ::selection {
-    background: #FF5D5D;
-    color: #08070D;
+    background: var(--color-volt);
+    color: var(--color-ink);
   }
   :focus-visible {
-    outline: 2px solid #3FE0D0;
+    outline: 2px solid var(--color-cyan);
     outline-offset: 3px;
   }
 }
