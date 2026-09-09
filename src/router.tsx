@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import type { ReactNode, MouseEvent } from 'react'
+import type { ReactNode, MouseEvent, CSSProperties } from 'react'
 
 type RouterState = {
   path: string
@@ -41,13 +41,14 @@ type LinkProps = {
   to: string
   children: ReactNode
   className?: string
+  style?: CSSProperties
   onClick?: () => void
 }
 
 // Same-origin route link. Falls through to a normal browser navigation for
 // modified clicks (ctrl/cmd/shift/middle-click) so "open in new tab" etc.
 // keep working.
-export function Link({ to, children, className, onClick }: LinkProps) {
+export function Link({ to, children, className, style, onClick }: LinkProps) {
   const { navigate } = useRouter()
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -58,7 +59,7 @@ export function Link({ to, children, className, onClick }: LinkProps) {
   }
 
   return (
-    <a href={to} className={className} onClick={handleClick}>
+    <a href={to} className={className} style={style} onClick={handleClick}>
       {children}
     </a>
   )
