@@ -48,7 +48,7 @@ export default function Hero() {
             </a>
             <a
               href="#contact"
-              className="rounded-full border border-line text-paper font-medium px-6 py-3 hover:border-cyan hover:text-cyan transition-colors"
+              className="rounded-full border-2 border-line text-paper font-medium px-6 py-3 hover:border-cyan hover:text-cyan transition-colors"
             >
               Get in touch
             </a>
