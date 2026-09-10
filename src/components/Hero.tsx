@@ -12,32 +12,42 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-ink/40 to-ink pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto px-6 pt-24">
-        <p className="eyebrow mb-5">Software Engineer, Frontend &amp; Agentic Tooling</p>
-        <h1 className="font-display font-semibold text-5xl sm:text-7xl leading-[1.05] max-w-3xl">
-          I build interfaces
-          <br />
-          <span className="text-volt">people actually use,</span>
-          <br />
-          backed by systems that actually work.
-        </h1>
-        <p className="mt-6 max-w-xl text-mist text-lg">
-          React and Tailwind for the product. Claude Code, custom skills, and subagents
-          for the workflow behind it. Tested with React Testing Library and Playwright,
-          shipped through GitHub Actions.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-4">
-          <a
-            href="#projects"
-            className="rounded-full bg-volt text-ink font-medium px-6 py-3 hover:bg-cyan transition-colors"
-          >
-            View projects
-          </a>
-          <a
-            href="#contact"
-            className="rounded-full border border-line bg-ink/60 backdrop-blur-sm text-paper font-medium px-6 py-3 hover:border-cyan hover:text-cyan transition-colors"
-          >
-            Get in touch
-          </a>
+        {/* Quiet zone: important text should never sit directly on top of the
+            mesh's bright shapes -- the mathematical contrast can be fine in
+            isolation, but the background changing color underneath a single
+            line of text is inherently harder to read than the number
+            suggests. A raised bg-panel card (same rounded-sm/backdrop-blur
+            treatment as the site's other cards, not the heavy rounding
+            CLAUDE.md rules out) gives the text a calm, consistent backdrop
+            without hiding the mesh outside its edges. */}
+        <div className="max-w-3xl bg-panel/85 backdrop-blur-sm rounded-sm p-6 sm:p-10">
+          <p className="eyebrow mb-5">Software Engineer, Frontend &amp; Agentic Tooling</p>
+          <h1 className="font-display font-semibold text-4xl sm:text-5xl lg:text-7xl leading-[1.15] sm:leading-[1.05]">
+            I build interfaces
+            <br />
+            <span className="text-volt">people actually use,</span>
+            <br />
+            backed by systems that actually work.
+          </h1>
+          <p className="mt-6 max-w-xl text-mist text-lg">
+            React and Tailwind for the product. Claude Code, custom skills, and subagents
+            for the workflow behind it. Tested with React Testing Library and Playwright,
+            shipped through GitHub Actions.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <a
+              href="#projects"
+              className="rounded-full bg-volt text-ink font-medium px-6 py-3 hover:bg-cyan transition-colors"
+            >
+              View projects
+            </a>
+            <a
+              href="#contact"
+              className="rounded-full border border-line text-paper font-medium px-6 py-3 hover:border-cyan hover:text-cyan transition-colors"
+            >
+              Get in touch
+            </a>
+          </div>
         </div>
       </div>
     </section>
