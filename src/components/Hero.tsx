@@ -11,7 +11,7 @@ export default function Hero() {
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-ink/40 to-ink pointer-events-none" />
 
-      <div className="relative max-w-6xl mx-auto px-6 pt-24">
+      <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-16">
         {/* Quiet zone: important text should never sit directly on top of the
             mesh's bright shapes -- the mathematical contrast can be fine in
             isolation, but the background changing color underneath a single
@@ -27,7 +27,7 @@ export default function Hero() {
             into the background with no visible boundary. */}
         <div className="max-w-3xl bg-panel border border-line rounded-sm p-6 sm:p-10">
           <p className="eyebrow mb-5">Software Engineer, Frontend &amp; Agentic Tooling</p>
-          <h1 className="font-display font-semibold text-4xl sm:text-5xl lg:text-7xl leading-[1.15] sm:leading-[1.05]">
+          <h1 className="font-display font-semibold text-3xl sm:text-5xl lg:text-7xl leading-[1.2] sm:leading-[1.05]">
             I build interfaces
             <br />
             <span className="text-volt">people actually use,</span>
