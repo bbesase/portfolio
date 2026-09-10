@@ -50,8 +50,12 @@ function NavLinkContent({ label }: { label: string }) {
 export default function Nav() {
   const [open, setOpen] = useState(false)
 
+  // Header is fully opaque, not translucent -- the Hero's mesh sits directly
+  // under this fixed header at full brightness, and a translucent backdrop
+  // (even blurred) still let bright triangles show through and clash with
+  // the nav text, same class of bug fixed in Hero's quiet-zone panel.
   return (
-    <header className="fixed top-0 inset-x-0 z-50 backdrop-blur bg-ink/70 border-b border-line">
+    <header className="fixed top-0 inset-x-0 z-50 bg-ink border-b border-line">
       <nav
         aria-label="Primary"
         className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4"
