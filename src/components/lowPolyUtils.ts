@@ -2,8 +2,15 @@
 // Colors are read from CSS custom properties so a future theme picker
 // can restyle the whole mesh by swapping --color-* vars.
 
-export const COLS = 14
-export const ROWS = 9
+// Grid divisions are derived per-call from the canvas's actual aspect
+// ratio (see buildMesh) rather than fixed, so cells stay roughly square on
+// any screen shape -- a fixed COLS/ROWS pair tuned for a landscape desktop
+// produced tall, narrow (visually "squished") triangles on a portrait
+// phone, since the same 14 columns had to fit into a much narrower width.
+// ~95px was chosen to match this fixed pair's own cell size at a typical
+// desktop viewport (1280x900 -> 91x100px cells), so desktop's look is
+// unchanged; mobile now gets fewer, squarer columns instead of 14 thin ones.
+export const CELL_TARGET = 95
 export const JITTER = 0.38
 export const SEED = 0xcafebef0
 export const ACCENT_PROB = 0.10
@@ -47,14 +54,17 @@ export function buildMesh(W: number, H: number): Tri[] {
   const dark = darkVars.map(v => hexToRgb(cssVar(v)))
   const accent = accentVars.map(v => hexToRgb(cssVar(v)))
 
+  const cols = Math.max(4, Math.round(W / CELL_TARGET))
+  const rows = Math.max(4, Math.round(H / CELL_TARGET))
+
   const rng = mkRng(SEED)
-  const cw = W / COLS
-  const ch = H / ROWS
+  const cw = W / cols
+  const ch = H / rows
 
   const verts: Array<[number, number]> = []
-  for (let r = 0; r <= ROWS; r++) {
-    for (let c = 0; c <= COLS; c++) {
-      const edge = r === 0 || r === ROWS || c === 0 || c === COLS
+  for (let r = 0; r <= rows; r++) {
+    for (let c = 0; c <= cols; c++) {
+      const edge = r === 0 || r === rows || c === 0 || c === cols
       const jx = edge ? 0 : (rng() - 0.5) * cw * JITTER * 2
       const jy = edge ? 0 : (rng() - 0.5) * ch * JITTER * 2
       verts.push([c * cw + jx, r * ch + jy])
@@ -62,12 +72,12 @@ export function buildMesh(W: number, H: number): Tri[] {
   }
 
   const tris: Tri[] = []
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      const tl = verts[r * (COLS + 1) + c]
-      const tr = verts[r * (COLS + 1) + c + 1]
-      const bl = verts[(r + 1) * (COLS + 1) + c]
-      const br = verts[(r + 1) * (COLS + 1) + c + 1]
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const tl = verts[r * (cols + 1) + c]
+      const tr = verts[r * (cols + 1) + c + 1]
+      const bl = verts[(r + 1) * (cols + 1) + c]
+      const br = verts[(r + 1) * (cols + 1) + c + 1]
 
       const pairs: [[number, number], [number, number], [number, number]][] = [
         [tl, tr, bl],
