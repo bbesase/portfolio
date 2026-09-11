@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-orpin-one-zfqvpln24l.vercel.app/sitemap.xml
