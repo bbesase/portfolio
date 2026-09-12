@@ -14,6 +14,23 @@ All source files are `.tsx`/`.ts`. Don't introduce `.jsx`/`.js` files in
 `src/`. Prefer explicit prop types over `any`; if a type is awkward, narrow
 it rather than widening to `any` or adding an `eslint-disable` comment.
 
+## Routing & pages
+
+Minimal hand-rolled router (`src/router.tsx`, `RouterProvider`/`useRouter`/
+`Link`) — no library, tracks `window.location.pathname` via the History
+API. Routes are matched in `src/App.tsx`'s `Routes()`, including the one
+dynamic segment, `/projects/:slug` (matched by prefix-stripping and a
+`find()` against `src/data/projects.ts`, not a route-pattern library).
+
+Each project's tools/architecture are described as `{ nodes, edges }` on
+its `Project` entry and rendered by `src/components/ArchitectureDiagram.tsx`
+(`src/pages/ProjectDetail.tsx`) — a hand-rolled, hover/click-interactive
+diagram (no diagramming library; the JS bundle has little headroom under
+`npm run size`'s budget). Adding a new project's diagram means adding
+`architecture.nodes`/`architecture.edges` to its data entry, not new
+component code — reuse this pattern rather than building a bespoke page
+per project.
+
 ## Branching
 
 Three environments: `dev` (default branch, day-to-day integration) →
