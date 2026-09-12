@@ -1,4 +1,5 @@
 import { projects } from '../data/projects'
+import { Link } from '../router'
 
 export default function Projects() {
   return (
@@ -10,9 +11,9 @@ export default function Projects() {
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p) => (
-            <a
+            <Link
               key={p.title}
-              href={p.href}
+              to={`/projects/${p.slug}`}
               className="group block bg-panel2 border border-line rounded-2xl p-6 text-paper no-underline hover:border-cyan transition-colors"
             >
               <h3 className="font-display text-xl font-semibold mb-2 group-hover:text-cyan transition-colors">
@@ -34,7 +35,7 @@ export default function Projects() {
                   </li>
                 ))}
               </ul>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
