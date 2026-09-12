@@ -17,21 +17,41 @@ test('direct navigation to a project detail page renders its diagram', async ({ 
   await expect(page.getByRole('button', { name: 'Minecraft Forge' })).toBeVisible()
 })
 
-test('hovering and keyboard-focusing a node reveals its description', async ({ page }) => {
+test('hovering and keyboard-focusing a node shows its description in the shared panel', async ({ page }) => {
   await page.goto('/projects/migrateiq')
   const prisma = page.getByRole('button', { name: 'Prisma' })
-  const tooltip = page.locator('[id^="arch-desc-prisma"]')
+  const panelId = await prisma.getAttribute('aria-describedby')
+  const panel = page.locator(`#${panelId}`)
 
-  await expect(tooltip).toHaveCSS('opacity', '0')
+  await expect(panel).toContainText(/hover or select a node/i)
   await prisma.hover()
-  await expect(tooltip).toHaveCSS('opacity', '1')
-  await expect(tooltip).toContainText(/ORM/i)
+  await expect(panel).toContainText(/ORM/i)
 
   await page.mouse.move(0, 0)
-  await expect(tooltip).toHaveCSS('opacity', '0')
+  await expect(panel).toContainText(/hover or select a node/i)
 
   await prisma.focus()
-  await expect(tooltip).toHaveCSS('opacity', '1')
+  await expect(panel).toContainText(/ORM/i)
+  await prisma.blur()
+  await expect(panel).toContainText(/hover or select a node/i)
+})
+
+test('the description panel never overlaps the diagram, even in the top row', async ({ page }) => {
+  // MigrateIQ's diagram has 5 rows -- hovering the first row's node is the
+  // exact case that previously rendered a floating tooltip on top of the
+  // row directly below it.
+  await page.goto('/projects/migrateiq')
+  const typescript = page.getByRole('button', { name: 'TypeScript' })
+  const lastRowNode = page.getByRole('button', { name: 'Postgres' })
+  await typescript.hover()
+
+  const panelBox = await page.locator(`#${await typescript.getAttribute('aria-describedby')}`).boundingBox()
+  const lastRowBox = await lastRowNode.boundingBox()
+  if (!panelBox || !lastRowBox) throw new Error('expected both elements to have a bounding box')
+
+  // The panel renders below every node in the diagram, including the
+  // last row's -- structurally impossible to collide with any node.
+  expect(panelBox.y).toBeGreaterThanOrEqual(lastRowBox.y + lastRowBox.height)
 })
 
 test('clicking a node highlights its connections and click-outside clears it', async ({ page }) => {
