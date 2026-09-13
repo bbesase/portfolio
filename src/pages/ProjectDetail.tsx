@@ -26,13 +26,13 @@ export default function ProjectDetail({ project }: { project: Project }) {
         </div>
       </header>
 
-      <main className="relative z-10 max-w-4xl mx-auto px-6 lg:px-12 pt-32 pb-24">
+      <main className="relative z-10 max-w-5xl mx-auto px-6 lg:px-12 pt-32 pb-24">
         <p className="eyebrow mb-4">Project</p>
         <h1 className="font-display text-4xl sm:text-5xl font-semibold mb-6">{project.title}</h1>
         <p className="text-mist text-lg leading-relaxed max-w-2xl mb-12">{project.blurb}</p>
 
         <h2 className="eyebrow mb-6">Tools &amp; architecture</h2>
-        <div className="bg-panel border border-line rounded-sm p-4 sm:p-8 mb-12">
+        <div className="bg-panel border border-line rounded-sm p-5 sm:p-10 mb-12">
           <ArchitectureDiagram nodes={project.architecture.nodes} edges={project.architecture.edges} />
         </div>
 

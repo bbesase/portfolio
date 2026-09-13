@@ -57,7 +57,7 @@ export default function ArchitectureDiagram({ nodes, edges }: Props) {
 
   return (
     <div ref={rootRef} className="w-full select-none">
-      <div className="relative w-full aspect-[4/5] sm:aspect-[16/9]">
+      <div className="relative w-full aspect-[3/5] sm:aspect-[16/10]">
         <svg
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
@@ -102,7 +102,7 @@ export default function ArchitectureDiagram({ nodes, edges }: Props) {
               onBlur={() => setHovered((prev) => (prev === n.id ? null : prev))}
               aria-describedby={panelId}
               aria-pressed={selected === n.id}
-              className="absolute flex max-w-[6.5rem] sm:max-w-[9rem] flex-col items-center gap-1.5 rounded-sm border bg-panel px-2.5 py-2 text-center font-mono text-[11px] sm:text-xs leading-snug text-paper transition-all duration-300"
+              className="absolute flex max-w-[7.5rem] sm:max-w-[10.5rem] flex-col items-center gap-2 rounded-sm border bg-panel px-3 py-2.5 text-center font-mono text-xs sm:text-sm leading-snug text-paper transition-all duration-300"
               style={{
                 left: `${pos.x}%`,
                 top: `${pos.y}%`,
@@ -114,8 +114,8 @@ export default function ArchitectureDiagram({ nodes, edges }: Props) {
               <span
                 aria-hidden="true"
                 style={{
-                  width: 8,
-                  height: 8,
+                  width: 10,
+                  height: 10,
                   background: pos.color,
                   clipPath: 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)',
                 }}
