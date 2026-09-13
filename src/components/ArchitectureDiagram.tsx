@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import type { ArchNode, ArchEdge, ArchCategory } from '../data/projects'
 
 // Fixed so every project's diagram reads top-to-bottom the same way --
@@ -16,7 +16,9 @@ type Props = {
 
 export default function ArchitectureDiagram({ nodes, edges }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
+  const [hovered, setHovered] = useState<string | null>(null)
   const rootRef = useRef<HTMLDivElement>(null)
+  const panelId = useId()
 
   // Click-outside-clears-selection, same pattern as ThemePicker's dropdown
   // -- a document-level listener rather than an onClick on this component's
@@ -48,54 +50,63 @@ export default function ArchitectureDiagram({ nodes, edges }: Props) {
 
   const isDimmed = (id: string) => !!selected && id !== selected && !isConnected(id)
 
-  return (
-    <div ref={rootRef} className="relative w-full aspect-[4/5] sm:aspect-[16/9] select-none">
-      <svg
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-0 h-full w-full"
-        aria-hidden="true"
-      >
-        {edges.map((e, i) => {
-          const from = positions[e.from]
-          const to = positions[e.to]
-          if (!from || !to) return null
-          const active = selected && (e.from === selected || e.to === selected)
-          const dimmed = selected && !active
-          return (
-            <line
-              key={i}
-              x1={from.x}
-              y1={from.y}
-              x2={to.x}
-              y2={to.y}
-              stroke={active ? from.color : 'var(--color-line)'}
-              strokeWidth={active ? 0.6 : 0.35}
-              opacity={dimmed ? 0.25 : 1}
-              className="transition-all duration-300"
-            />
-          )
-        })}
-      </svg>
+  // Hover wins over a click-selection while it lasts (lets you preview a
+  // different node's role without losing your click-highlighted one), and
+  // falls back to it once the mouse/focus leaves.
+  const active = nodes.find((n) => n.id === (hovered ?? selected))
 
-      {nodes.map((n) => {
-        const pos = positions[n.id]
-        if (!pos) return null
-        const dimmed = isDimmed(n.id)
-        const highlighted = selected === n.id || isConnected(n.id)
-        return (
-          <div
-            key={n.id}
-            className="group absolute"
-            style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: 'translate(-50%, -50%)' }}
-          >
+  return (
+    <div ref={rootRef} className="w-full select-none">
+      <div className="relative w-full aspect-[3/5] sm:aspect-[16/10]">
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          aria-hidden="true"
+        >
+          {edges.map((e, i) => {
+            const from = positions[e.from]
+            const to = positions[e.to]
+            if (!from || !to) return null
+            const activeEdge = selected && (e.from === selected || e.to === selected)
+            const dimmed = selected && !activeEdge
+            return (
+              <line
+                key={i}
+                x1={from.x}
+                y1={from.y}
+                x2={to.x}
+                y2={to.y}
+                stroke={activeEdge ? from.color : 'var(--color-line)'}
+                strokeWidth={activeEdge ? 0.6 : 0.35}
+                opacity={dimmed ? 0.25 : 1}
+                className="transition-all duration-300"
+              />
+            )
+          })}
+        </svg>
+
+        {nodes.map((n) => {
+          const pos = positions[n.id]
+          if (!pos) return null
+          const dimmed = isDimmed(n.id)
+          const highlighted = selected === n.id || isConnected(n.id)
+          return (
             <button
+              key={n.id}
               type="button"
               onClick={() => setSelected((prev) => (prev === n.id ? null : n.id))}
-              aria-describedby={`arch-desc-${n.id}`}
+              onMouseEnter={() => setHovered(n.id)}
+              onMouseLeave={() => setHovered((prev) => (prev === n.id ? null : prev))}
+              onFocus={() => setHovered(n.id)}
+              onBlur={() => setHovered((prev) => (prev === n.id ? null : prev))}
+              aria-describedby={panelId}
               aria-pressed={selected === n.id}
-              className="flex max-w-[6.5rem] sm:max-w-[9rem] flex-col items-center gap-1.5 rounded-sm border bg-panel px-2.5 py-2 text-center font-mono text-[11px] sm:text-xs leading-snug text-paper transition-all duration-300"
+              className="absolute flex max-w-[7.5rem] sm:max-w-[10.5rem] flex-col items-center gap-2 rounded-sm border bg-panel px-3 py-2.5 text-center font-mono text-xs sm:text-sm leading-snug text-paper transition-all duration-300"
               style={{
+                left: `${pos.x}%`,
+                top: `${pos.y}%`,
+                transform: 'translate(-50%, -50%)',
                 borderColor: highlighted ? pos.color : 'var(--color-line)',
                 opacity: dimmed ? 0.4 : 1,
               }}
@@ -103,32 +114,40 @@ export default function ArchitectureDiagram({ nodes, edges }: Props) {
               <span
                 aria-hidden="true"
                 style={{
-                  width: 8,
-                  height: 8,
+                  width: 10,
+                  height: 10,
                   background: pos.color,
                   clipPath: 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)',
                 }}
               />
               {n.label}
             </button>
-            {/* Description is always in the DOM (readable via
-                aria-describedby regardless of visual state) and only
-                visually revealed on hover/focus. group-focus-within (not
-                group-focus-visible on the button itself) is required here
-                -- group and group-*: variants only match a *descendant* of
-                the .group element, not the group element itself, which is
-                exactly the bug that broke the nav hover effect earlier in
-                this project. */}
-            <div
-              id={`arch-desc-${n.id}`}
-              role="tooltip"
-              className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-44 -translate-x-1/2 rounded-sm border border-line bg-panel2 p-2 text-xs leading-relaxed text-mist opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100"
-            >
-              {n.description}
-            </div>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
+
+      {/* Fixed panel below the grid, not a floating per-node tooltip --
+          a tooltip positioned relative to its own node had no awareness of
+          neighboring nodes and could render right on top of one in a
+          tightly-packed row (confirmed via screenshot on a 5-row diagram).
+          A single shared, fixed-position panel can't collide with
+          anything, and every node points at it via aria-describedby, so a
+          screen reader announces the right text no matter which node has
+          focus -- the panel's content updates in the same render as the
+          focus-triggered state change. */}
+      <div
+        id={panelId}
+        className="mt-4 flex min-h-[4.5rem] items-center rounded-sm border border-line bg-panel2 px-4 py-3 text-sm leading-relaxed text-mist"
+      >
+        {active ? (
+          <span>
+            <span className="text-paper font-medium">{active.label}: </span>
+            {active.description}
+          </span>
+        ) : (
+          <span>Hover or select a node to see its role in this project.</span>
+        )}
+      </div>
     </div>
   )
 }
