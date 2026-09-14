@@ -20,6 +20,14 @@ test('journey page has no detectable accessibility violations', async ({ page })
   expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([])
 })
 
+test('project detail page has no detectable accessibility violations', async ({ page }) => {
+  await page.goto('/projects/migrateiq')
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa'])
+    .analyze()
+  expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([])
+})
+
 // Each palette is a real, sanctioned choice (see CLAUDE.md), not a one-off
 // -- so every one of them needs its own contrast check, not just the
 // default. localStorage is set before the app boots (goto, then reload)
@@ -37,6 +45,16 @@ for (const theme of THEME_IDS) {
 
   test(`journey page has no detectable accessibility violations [${theme}]`, async ({ page }) => {
     await page.goto('/journey')
+    await page.evaluate((t) => localStorage.setItem('portfolio-theme', t), theme)
+    await page.reload()
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa'])
+      .analyze()
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([])
+  })
+
+  test(`project detail page has no detectable accessibility violations [${theme}]`, async ({ page }) => {
+    await page.goto('/projects/migrateiq')
     await page.evaluate((t) => localStorage.setItem('portfolio-theme', t), theme)
     await page.reload()
     const results = await new AxeBuilder({ page })
