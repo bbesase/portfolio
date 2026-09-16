@@ -12,12 +12,23 @@ test('homepage and journey page have distinct titles and descriptions', async ({
   expect(journeyDescription).toMatch(/where Brent Besase has worked/)
 })
 
-test('homepage exposes canonical link and Open Graph/Twitter tags', async ({ page }) => {
+test('homepage exposes canonical link and Open Graph/Twitter tags', async ({ page, request }) => {
   await page.goto('/')
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /^https:\/\//)
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Brent Besase/)
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', /^https:\/\//)
-  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary')
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
+
+  const ogImage = await page.locator('meta[property="og:image"]').getAttribute('content')
+  expect(ogImage).toMatch(/^https:\/\/.*\/og-image\.png$/)
+  await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute('content', '1200')
+  await expect(page.locator('meta[property="og:image:height"]')).toHaveAttribute('content', '630')
+  await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', ogImage ?? '')
+
+  // The image itself is reachable at exactly the declared 1200x630 size.
+  const imageResponse = await request.get('/og-image.png')
+  expect(imageResponse.ok()).toBe(true)
+  expect(imageResponse.headers()['content-type']).toBe('image/png')
 })
 
 test('homepage embeds valid Person JSON-LD', async ({ page }) => {
