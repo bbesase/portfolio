@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1200px;
+    height: 630px;
+    background: #08070D;
+    overflow: hidden;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .stage {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+  }
+  /* Faceted accent shapes, corners only -- text sits in a deliberately
+     clean zone (the same "quiet zone" principle used for the Hero). */
+  .facet {
+    position: absolute;
+    clip-path: polygon(50% 0, 100% 38%, 82% 100%, 0 82%);
+  }
+  .f1 { top: -140px; right: -120px; width: 480px; height: 480px; background: #8B6BFF; opacity: 0.9; }
+  .f2 { top: -60px; right: 140px; width: 260px; height: 260px; background: #3FE0D0; opacity: 0.85; transform: rotate(25deg); }
+  .f3 { bottom: -160px; right: -80px; width: 380px; height: 380px; background: #FF5D5D; opacity: 0.85; transform: rotate(-15deg); }
+  .f4 { bottom: -120px; left: -100px; width: 320px; height: 320px; background: #1A1730; opacity: 1; transform: rotate(40deg); }
+  .f5 { bottom: 40px; left: 60px; width: 140px; height: 140px; background: #3FE0D0; opacity: 0.5; transform: rotate(70deg); }
+
+  /* Subtle scrim so the shapes never fight with the text, same logic as
+     the Hero's gradient over the low-poly mesh. */
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, #08070D 0%, #08070D 52%, rgba(8,7,13,0.55) 68%, rgba(8,7,13,0.15) 100%);
+  }
+
+  .content {
+    position: absolute;
+    left: 88px;
+    top: 0;
+    height: 630px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #3FE0D0;
+    margin-bottom: 28px;
+  }
+  .diamond {
+    width: 12px;
+    height: 12px;
+    background: #FF5D5D;
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    flex-shrink: 0;
+  }
+  h1 {
+    font-size: 84px;
+    font-weight: 700;
+    line-height: 1.05;
+    color: #F3F1FA;
+    letter-spacing: -0.01em;
+  }
+  h1 .accent { color: #FF5D5D; }
+  .tagline {
+    margin-top: 30px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 25px;
+    font-weight: 500;
+    color: #9691B0;
+    max-width: 620px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="facet f4"></div>
+    <div class="facet f1"></div>
+    <div class="facet f2"></div>
+    <div class="facet f3"></div>
+    <div class="facet f5"></div>
+    <div class="scrim"></div>
+    <div class="content">
+      <div class="eyebrow"><span class="diamond"></span>Software Engineer</div>
+      <h1>Brent<span class="accent">Besase</span></h1>
+      <p class="tagline">Frontend engineering &amp; agentic AI tooling.<br/>React, Tailwind, and Claude Code.</p>
+    </div>
+  </div>
+</body>
+</html>
