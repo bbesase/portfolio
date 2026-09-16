@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:e2e": "playwright test",
-    "size": "size-limit"
+    "size": "size-limit",
+    "og-image": "node scripts/generate-og.mjs"
   },
   "size-limit": [
     {
