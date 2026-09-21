@@ -18,8 +18,8 @@
     --color-violet: #8B6BFF;
   }
   [data-theme="cherry-blossom"] {
-    --color-ink: #FBF1EE;
-    --color-panel: #F5E4DE;
+    --color-ink: #F3E7DB;
+    --color-panel: #EAD9C8;
     --color-panel2: #ECD3C7;
     --color-line: #DCB9AC;
     --color-mist: #71494D;
@@ -29,10 +29,10 @@
     --color-violet: #356333;
   }
   [data-theme="light-ocean"] {
-    --color-ink: #EFF8FB;
-    --color-panel: #E1F0F4;
-    --color-panel2: #CDE6EC;
-    --color-line: #AFD3DE;
+    --color-ink: #F4E8D0;
+    --color-panel: #F1E3CC;
+    --color-panel2: #EBE2BA;
+    --color-line: #D8CCB2;
     --color-mist: #3A5F6C;
     --color-paper: #0C232E;
     --color-volt: #146A96;
