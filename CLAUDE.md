@@ -58,14 +58,31 @@ README's "Branching model" section for the full flow.
   - `faceted-dark` (default) — ink #08070D, panel #121020, panel2 #1A1730,
     line #2A2640, mist #9691B0, paper #F3F1FA, volt #FF5D5D, cyan #3FE0D0,
     violet #8B6BFF.
-  - `cherry-blossom` (light — off-white blush base, dark plum text) —
-    ink #FBF1EE, panel #F5E4DE, panel2 #ECD3C7, line #DCB9AC,
+  - `cherry-blossom` (light — warm cream/blush base, dark plum text) —
+    ink #F3E7DB, panel #EAD9C8, panel2 #ECD3C7, line #DCB9AC,
     mist #71494D, paper #2A151A, volt #A32E58 (sakura pink),
     cyan #7A5714 (stamen gold), violet #356333 (leaf sage).
-  - `light-ocean` (light — pale sky/foam base, deep navy text) —
-    ink #EFF8FB, panel #E1F0F4, panel2 #CDE6EC, line #AFD3DE,
+  - `light-ocean` (light — warm sand base, deep navy text, ocean accents) —
+    ink #F4E8D0, panel #F1E3CC, panel2 #EBE2BA, line #D8CCB2,
     mist #3A5F6C, paper #0C232E, volt #146A96 (sea blue),
     cyan #0E6D5A (deep teal), violet #5347B8 (indigo).
+  - Both light palettes' original near-white `ink`/`panel` (original
+    `cherry-blossom` ink was #FBF1EE, `light-ocean` was #EFF8FB —
+    luminance ~0.9) read as a blinding flash on load per user feedback,
+    especially before the eye adjusts. `cherry-blossom` was already
+    warm-toned, so only its `ink`/`panel` were darkened (`panel2`/`line`/
+    text/accents kept their exact original hex, since that contrast was
+    already tuned). `light-ocean`'s base was icy blue, not cream at all,
+    so all four surface tokens were recolored to a warm sand hue *at
+    matching luminance* to its originals -- same lightness steps (and
+    thus the same accent contrast ratios), just warm instead of cool. Any
+    future re-tuning of these tokens must preserve luminance (check with
+    the WCAG relative-luminance formula, not by eye) rather than picking
+    hex by feel, since the accent colors were calibrated against the
+    original luminance values and a same-looking-but-different-luminance
+    swap can silently drop contrast below AA (this happened once already
+    with an initial light-ocean pass -- volt/cyan text dropped to
+    ~3.8:1 against a recolored panel2 before being corrected).
   - Light palettes' accents are deepened well past the flat-bg AA minimum
     for the same reason the dark palettes' accents were lightened past
     it — the low-poly mesh renders behind text at full opacity, so a

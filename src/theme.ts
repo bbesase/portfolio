@@ -32,7 +32,7 @@ export const THEMES: Theme[] = [
     id: 'cherry-blossom',
     label: 'Cherry Blossom',
     colors: {
-      ink: '#FBF1EE', panel: '#F5E4DE', panel2: '#ECD3C7', line: '#DCB9AC',
+      ink: '#F3E7DB', panel: '#EAD9C8', panel2: '#ECD3C7', line: '#DCB9AC',
       mist: '#71494D', paper: '#2A151A',
       volt: '#A32E58', cyan: '#7A5714', violet: '#356333',
     },
@@ -41,7 +41,7 @@ export const THEMES: Theme[] = [
     id: 'light-ocean',
     label: 'Light Ocean',
     colors: {
-      ink: '#EFF8FB', panel: '#E1F0F4', panel2: '#CDE6EC', line: '#AFD3DE',
+      ink: '#F4E8D0', panel: '#F1E3CC', panel2: '#EBE2BA', line: '#D8CCB2',
       mist: '#3A5F6C', paper: '#0C232E',
       volt: '#146A96', cyan: '#0E6D5A', violet: '#5347B8',
     },
