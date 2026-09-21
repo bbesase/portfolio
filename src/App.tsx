@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import { RouterProvider, useRouter } from './router'
 import { projects } from './data/projects'
 import Home from './pages/Home'
@@ -48,6 +49,7 @@ function App() {
   return (
     <RouterProvider>
       <Routes />
+      <Analytics />
     </RouterProvider>
   )
 }
