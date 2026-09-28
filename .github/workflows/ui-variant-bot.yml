@@ -55,7 +55,7 @@ jobs:
     steps:
       - name: Resolve PR, check base branch, parse brief
         id: check
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const allowed = process.env.ALLOWED_BASE_BRANCHES.split(',').map(s => s.trim());
@@ -113,12 +113,12 @@ jobs:
     if: needs.gate.outputs.allowed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.gate.outputs.head_ref }}
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -160,7 +160,7 @@ jobs:
             --allowedTools "Read,Edit,Write,Bash(npm run lint:*),Bash(npm run typecheck:*),Bash(npm run test:*),Bash(npm run build:*),Bash(npm run preview:*),Bash(node *),Bash(git *),Bash(mkdir:*),Bash(ls:*),Bash(kill:*),Bash(pkill:*),Bash(curl:*),Bash(sleep:*)"
 
       - name: Push winning variant to a review branch and open a PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           HEAD_REF: ${{ needs.gate.outputs.head_ref }}
           PR_NUMBER: ${{ needs.gate.outputs.pr_number }}
